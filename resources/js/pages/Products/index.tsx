@@ -1,16 +1,14 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { BadgeAlert, Megaphone, SquarePen, Trash2 } from 'lucide-react';
+import {  Megaphone, SquarePen, Trash2 } from 'lucide-react';
 
 import { route } from 'ziggy-js'
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
@@ -78,7 +76,7 @@ interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
     variant?: AlertVariant;
 }
 
-export default function index() {
+export default function Index() {
 
     const { products, flash } = usePage().props as unknown as PageProps;
 

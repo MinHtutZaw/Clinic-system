@@ -29,7 +29,7 @@ interface Props{
 }
 
 
-export default function edit({patient} : Props) {
+export default function Edit({patient} : Props) {
     const { data, setData, put, processing, errors } = useForm({
         name: patient.name,
         phone: patient.phone,

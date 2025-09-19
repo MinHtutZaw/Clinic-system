@@ -29,7 +29,7 @@ interface Props{
 }
 
 
-export default function edit({product} : Props) {
+export default function Edit({product} : Props) {
     const { data, setData, put, processing, errors } = useForm({
         name: product.name,
         price : product.price,
