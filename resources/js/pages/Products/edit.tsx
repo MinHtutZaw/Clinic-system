@@ -21,7 +21,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 interface Product {
     id :number
     name: string,
-    price: number,
+    price: string,
     description: string,
 };
 interface Props{
@@ -86,7 +86,7 @@ export default function Edit({product} : Props) {
                                 id="price"
                                 type="number"
                                 value={data.price}
-                                onChange={(e) => setData('price', Number(e.target.value))}
+                                onChange={(e) => setData('price', (e.target.value))}
                                 placeholder="Enter price"
                             />
                             {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}

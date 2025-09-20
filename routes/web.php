@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RecordController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -15,6 +16,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
+//patient
+
     Route::get('/patients', [PatientController::class, 'index'])->name('patients.index');
     Route::get('/patients/create', [PatientController::class, 'create'])->name('patients.create');
 
@@ -27,10 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/patients/{patient}', [PatientController::class, 'destroy'])->name('patients.destroy');
 
 
-
-
-
-
+//   Product
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
 
@@ -41,6 +41,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+
+
+//record
+     Route::get('/records', [RecordController::class, 'index'])->name('records.index');
+    Route::get('/records/create', [RecordController::class, 'create'])->name('records.create');
+
+    Route::post('/records', [RecordController::class, 'store'])->name('records.store');
+    
+    Route::delete('/records/{record}', [RecordController::class, 'destroy'])->name('records.destroy');
 });
 
 require __DIR__ . '/settings.php';
