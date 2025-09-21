@@ -2,6 +2,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
@@ -22,6 +23,7 @@ export default function Create() {
         phone: '',
         town: '',
         age: '',
+        role : '',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -100,6 +102,25 @@ export default function Create() {
                             />
                             {errors.age && <p className="text-red-500 text-sm">{errors.age}</p>}
                         </div>
+
+                        <div>
+                            <Label htmlFor="role">Patient Role</Label>
+                            <Select
+                                value={data.role}
+                                onValueChange={(value) => setData("role", value)}
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select role" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="normal">Normal</SelectItem>
+                                    <SelectItem value="vvip">VVIP</SelectItem>
+                                   
+                                </SelectContent>
+                            </Select>
+                            {errors.role && <p className="text-red-500 text-sm">{errors.role}</p>}
+                        </div>
+
 
                         <Button type="submit" disabled={processing} className="w-full">
                             {processing ? 'Saving...' : 'Add Patient'}

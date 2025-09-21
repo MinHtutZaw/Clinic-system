@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import {  Megaphone, SquarePen, Trash2 } from 'lucide-react';
+import { Megaphone, SquarePen, Trash2 } from 'lucide-react';
 
 import { route } from 'ziggy-js'
 import {
@@ -46,7 +46,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 interface Product {
     id: number;
     name: string;
-    price: string;
+
     description: string;
 }
 
@@ -118,9 +118,9 @@ export default function Index() {
                                 <TableRow>
                                     <TableHead className="w-[100px]">ID</TableHead>
                                     <TableHead>Name</TableHead>
-                                    <TableHead>Price per sessions</TableHead>
+                                  
                                     <TableHead>Description</TableHead>
-
+                                   
                                     <TableHead>Action</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -131,8 +131,13 @@ export default function Index() {
                                         <TableRow>
                                             <TableCell className="font-medium">{product.id} </TableCell>
                                             <TableCell>{product.name} </TableCell>
-                                            <TableCell>{product.price} </TableCell>
-                                            <TableCell>{product.description} </TableCell>
+                                          
+                                            <TableCell>
+                                                {product.description.length > 50
+                                                    ? product.description.substring(0, 50) + "..."
+                                                    : product.description}
+                                            </TableCell>
+                                            
 
                                             <TableCell className="space-x-2">
                                                 <Link href={route('products.edit', product.id)}> <button className='text-blue-400 hover:text-blue-800'>  <SquarePen /></button></Link>

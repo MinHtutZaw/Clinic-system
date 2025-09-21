@@ -11,19 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->text('description');
-            $table->timestamps();
+        Schema::table('patients', function (Blueprint $table) {
+            $table->string('role')->default('normal')->after('free_trials');
+            
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::table('patients', function (Blueprint $table) {
+            $table->dropColumn('role');
+        });
     }
 };

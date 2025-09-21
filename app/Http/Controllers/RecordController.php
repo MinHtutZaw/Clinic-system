@@ -56,7 +56,7 @@ class RecordController extends Controller
 
         // Determine the actual price to charge
         if ($patient->free_trials > 0) {
-            $price = 0.00; // Free treatment
+            $price = 0.00;  // Free treatment
             $patient->decrement('free_trials');
         } else {
             // Use product price as default, but allow custom pricing if needed

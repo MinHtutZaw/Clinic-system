@@ -163,7 +163,7 @@ export default function Index() {
                                             {record.product?.name ?? "Unknown"}
                                         </TableCell>
                                         <TableCell>{record.duration} min</TableCell>
-                                        <TableCell>${record.price}</TableCell>
+                                        <TableCell>{record.price} MMK</TableCell>
                                         <TableCell>
                                             {new Intl.DateTimeFormat("en-US", {
                                                 year: "numeric",

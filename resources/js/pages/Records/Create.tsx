@@ -7,6 +7,13 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { BadgeAlert } from 'lucide-react';
 import { route } from 'ziggy-js';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Treatment Records', href: '/records/create' },
@@ -22,6 +29,7 @@ interface Product {
     id: number;
     name: string;
 }
+
 
 interface PageProps {
     patients: Patient[];
@@ -68,58 +76,75 @@ export default function Create() {
                             </Alert>
                         )}
 
+
+
+
+
                         {/* Patient Select */}
                         <div>
                             <Label htmlFor="patient_id">Select Patient</Label>
-                            <select
-                                id="patient_id"
+                            <Select
                                 value={data.patient_id}
-                                onChange={(e) => setData('patient_id', e.target.value)}
-                                className="w-full border rounded p-2 dark:bg-gray-800 dark:text-white"
+                                onValueChange={(value) => setData("patient_id", value)}
                             >
-                                <option value="">-- Choose Patient --</option>
-                                {patients.map((p) => (
-                                    <option key={p.id} value={p.id}>
-                                        {p.name}
-                                    </option>
-                                ))}
-                            </select>
-                            {errors.patient_id && <p className="text-red-500 text-sm">{errors.patient_id}</p>}
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder=" Choose Patient " />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {patients.map((p) => (
+                                        <SelectItem key={p.id} value={String(p.id)}>
+                                            {p.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {errors.patient_id && (
+                                <p className="text-red-500 text-sm">{errors.patient_id}</p>
+                            )}
                         </div>
 
                         {/* Product Select */}
                         <div>
                             <Label htmlFor="product_id">Select Product</Label>
-                            <select
-                                id="product_id"
+                            <Select
                                 value={data.product_id}
-                                onChange={(e) => setData('product_id', e.target.value)}
-                                className="w-full border rounded p-2 dark:bg-gray-800 dark:text-white"
+                                onValueChange={(value) => setData("product_id", value)}
                             >
-                                <option value="">-- Choose Product --</option>
-                                {products.map((p) => (
-                                    <option key={p.id} value={p.id}>
-                                        {p.name}
-                                    </option>
-                                ))}
-                            </select>
-                            {errors.product_id && <p className="text-red-500 text-sm">{errors.product_id}</p>}
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder=" Choose Product " />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {products.map((p) => (
+                                        <SelectItem key={p.id} value={String(p.id)}>
+                                            {p.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {errors.product_id && (
+                                <p className="text-red-500 text-sm">{errors.product_id}</p>
+                            )}
                         </div>
 
                         {/* Duration Select */}
                         <div>
                             <Label htmlFor="duration">Duration</Label>
-                            <select
-                                id="duration"
+                            <Select
                                 value={data.duration}
-                                onChange={(e) => setData('duration', e.target.value)}
-                                className="w-full border rounded p-2 dark:bg-gray-800 dark:text-white"
+                                onValueChange={(value) => setData("duration", value)}
                             >
-                                <option value="15">15 minutes</option>
-                                <option value="30">30 minutes</option>
-                                <option value="60">1 hour</option>
-                            </select>
-                            {errors.duration && <p className="text-red-500 text-sm">{errors.duration}</p>}
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Choose duration" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="15">15 minutes</SelectItem>
+                                    <SelectItem value="30">30 minutes</SelectItem>
+                                    <SelectItem value="60">1 hour</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            {errors.duration && (
+                                <p className="text-red-500 text-sm">{errors.duration}</p>
+                            )}
                         </div>
 
                         {/* Price - only show if no free trials */}
@@ -131,12 +156,15 @@ export default function Create() {
                                     type="number"
                                     step="0.01"
                                     value={data.price}
-                                    onChange={(e) => setData('price', e.target.value)}
+                                    onChange={(e) => setData("price", e.target.value)}
                                     placeholder="Enter price (MMK)"
                                 />
-                                {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
+                                {errors.price && (
+                                    <p className="text-red-500 text-sm">{errors.price}</p>
+                                )}
                             </div>
                         )}
+
                         {/* Submit */}
                         <Button type="submit" disabled={processing} className="w-full">
                             {processing ? 'Saving...' : 'Save Record'}
