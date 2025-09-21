@@ -23,6 +23,7 @@ interface Patient {
     id: number;
     name: string;
     free_trials: number;
+    role :string
 }
 
 interface Product {
@@ -147,23 +148,35 @@ export default function Create() {
                             )}
                         </div>
 
-                        {/* Price - only show if no free trials */}
-                        {patients.find((p) => p.id.toString() === data.patient_id)?.free_trials === 0 && (
-                            <div>
-                                <Label htmlFor="price">Price</Label>
-                                <Input
-                                    id="price"
-                                    type="number"
-                                    step="0.01"
-                                    value={data.price}
-                                    onChange={(e) => setData("price", e.target.value)}
-                                    placeholder="Enter price (MMK)"
-                                />
-                                {errors.price && (
-                                    <p className="text-red-500 text-sm">{errors.price}</p>
-                                )}
-                            </div>
-                        )}
+                        {/* Price - only show if no free trials AND not VVIP */}
+                        {(() => {
+                            const selectedPatient = patients.find(
+                                (p) => p.id.toString() === data.patient_id
+                            );
+                            if (!selectedPatient) return null;
+
+                            // Only show price if patient is NOT vvip AND free_trials == 0
+                            if (selectedPatient.role !== "vvip" && selectedPatient.free_trials === 0) {
+                                return (
+                                    <div>
+                                        <Label htmlFor="price">Price</Label>
+                                        <Input
+                                            id="price"
+                                            type="number"
+                                            step="0.01"
+                                            value={data.price}
+                                            onChange={(e) => setData("price", e.target.value)}
+                                            placeholder="Enter price (MMK)"
+                                        />
+                                        {errors.price && (
+                                            <p className="text-red-500 text-sm">{errors.price}</p>
+                                        )}
+                                    </div>
+                                );
+                            }
+                            return null;
+                        })()}
+
 
                         {/* Submit */}
                         <Button type="submit" disabled={processing} className="w-full">

@@ -43,35 +43,47 @@ class RecordController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'product_id' => 'required|exists:products,id',
-            'duration'   => 'required|integer',
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'patient_id' => 'required|exists:patients,id',
+        'product_id' => 'required|exists:products,id',
+        'duration'   => 'required|integer',
+    ]);
 
-        $patient = Patient::findOrFail($request->patient_id);
-        $product = Product::findOrFail($request->product_id);
+    $patient = Patient::findOrFail($request->patient_id);
+    $product = Product::findOrFail($request->product_id);
 
-        // Determine the actual price to charge
-        if ($patient->free_trials > 0) {
-            $price = 0.00;  // Free treatment
-            $patient->decrement('free_trials');
-        } else {
-            // Use product price as default, but allow custom pricing if needed
-            $price = $request->filled('price') ? (float)$request->price : $product->price;
-        }
+    $price = 0.00; // default
 
-        Record::create([
-            'patient_id' => $patient->id,
-            'product_id' => $product->id,
-            'duration'   => $request->duration,
-            'price'      => $price, // This is what the patient actually paid
-        ]);
-
-        return redirect()->route('records.index')->with('message', 'Record saved successfully.');
+    // If patient role is VVIP
+    if (in_array($patient->role, ['vvip'])) {
+        $price = 0.00;
     }
+    // If free trials are available → free & decrement
+    elseif ($patient->free_trials > 0) {
+        $price = 0.00;
+        $patient->free_trials -= 1;
+        $patient->save();
+    }
+   
+    else {
+        $price = $request->filled('price') 
+            ? (float) $request->price 
+            : (float) $product->price;
+    }
+
+    Record::create([
+        'patient_id' => $patient->id,
+        'product_id' => $product->id,
+        'duration'   => $request->duration,
+        'price'      => $price,
+    ]);
+
+    return redirect()
+        ->route('records.index')
+        ->with('message', 'Record saved successfully.');
+}
 
     /**
      * Display the specified resource.

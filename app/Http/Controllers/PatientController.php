@@ -9,22 +9,22 @@ use Inertia\Inertia;
 class PatientController extends Controller
 {
     public function index(Request $request)
-{
-    $patients = Patient::orderBy('id', 'desc')
-        ->filter($request->only(['search', 'town', 'age']))
-        ->paginate(2)
-        ->withQueryString();
+    {
+        $patients = Patient::orderBy('id', 'desc')
+            ->filter($request->only(['search', 'town', 'age']))
+            ->paginate(2)
+            ->withQueryString();
 
-    // Get all unique towns and ages for filter dropdowns
-    $allTowns = Patient::select('town')->distinct()->pluck('town');
-    $allAges = Patient::select('age')->distinct()->pluck('age');
+        // Get all unique towns and ages for filter dropdowns
+        $allTowns = Patient::select('town')->distinct()->pluck('town');
+        $allAges = Patient::select('age')->distinct()->pluck('age');
 
-    return Inertia::render('Patients/index', [
-        'patients' => $patients,
-        'allTowns' => $allTowns,
-        'allAges' => $allAges,
-    ]);
-}
+        return Inertia::render('Patients/index', [
+            'patients' => $patients,
+            'allTowns' => $allTowns,
+            'allAges' => $allAges,
+        ]);
+    }
     public function create()
     {
         return Inertia::render('Patients/create');
@@ -39,7 +39,9 @@ class PatientController extends Controller
                 'phone'   => 'required|string|max:20',
                 'town' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z\s,.-]+$/'],
                 'age'     => 'required|integer|min:0|max:120',
+                'role'    => 'required|in:normal,vvip', 
             ]
+            //
         );
         Patient::create($validated);
         return redirect()->route('patients.index')->with('message', 'Data is added successfully.');

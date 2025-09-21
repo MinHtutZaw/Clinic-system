@@ -68,18 +68,6 @@ export default function Create() {
 
                      
                         <div>
-                            <Label htmlFor="price">Price per session</Label>
-                            <Input
-                                id="price"
-                                type="number"
-                                value={data.price}
-                                onChange={(e) => setData('price', e.target.value)}
-                                placeholder="Enter price"
-                            />
-                            {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
-                        </div>
-
-                        <div>
                             <Label htmlFor="description">Description</Label>
                             <Textarea
                                 id="description"

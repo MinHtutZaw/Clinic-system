@@ -46,6 +46,7 @@ interface Patient {
     town: string;
     age: number;
     free_trials: number;
+    role :string
 }
 
 interface PaginationLink {
@@ -177,6 +178,7 @@ export default function Index() {
                                 <TableHead>Town</TableHead>
                                 <TableHead>Age</TableHead>
                                 <TableHead>Trials left</TableHead>
+                                 <TableHead>User role</TableHead>
                                 <TableHead>Action</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -189,7 +191,13 @@ export default function Index() {
                                     <TableCell>{patient.phone}</TableCell>
                                     <TableCell>{patient.town}</TableCell>
                                     <TableCell>{patient.age}</TableCell>
-                                    <TableCell>{patient.free_trials}</TableCell>
+
+
+                                    <TableCell>
+                                        {patient.role === "vvip" ? "----" : patient.free_trials}
+                                    </TableCell>
+                                      <TableCell>{patient.role}</TableCell>
+
                                     <TableCell>
                                         <Link href={route('patients.edit', patient.id)}>
                                             <button className='text-blue-400 hover:text-blue-800'>

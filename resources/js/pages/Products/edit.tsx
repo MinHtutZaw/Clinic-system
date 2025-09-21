@@ -35,6 +35,11 @@ export default function Edit({product} : Props) {
         price : product.price,
         description : product.description,
     });
+       // ✅ check if form data is unchanged
+  const isUnchanged =
+    data.name === product.name &&
+    data.price === product.price &&
+    data.description === product.description ;
 
 
     const handleUpdate = (e: React.FormEvent) => {
@@ -103,7 +108,7 @@ export default function Edit({product} : Props) {
                             {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
                         </div>
 
-                        <Button type="submit" disabled={processing} className="w-full">
+                        <Button type="submit" disabled={processing || isUnchanged} className="w-full">
                             Update Product data
                         </Button>
                     </form>

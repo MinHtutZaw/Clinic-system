@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('phone', 20);
             $table->string('town');
             $table->integer('age');
-            $table->integer('free_trials')->nullable()->default(3);
+            $table->integer('free_trials')->default(3);
             $table->timestamps();
         });
     }

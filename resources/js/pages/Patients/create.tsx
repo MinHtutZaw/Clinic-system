@@ -23,7 +23,7 @@ export default function Create() {
         phone: '',
         town: '',
         age: '',
-        role : '',
+        role : 'normal',
     });
 
     const handleSubmit = (e: React.FormEvent) => {

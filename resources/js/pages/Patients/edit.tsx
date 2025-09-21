@@ -38,6 +38,14 @@ export default function Edit({patient} : Props) {
     });
 
 
+    // ✅ check if form data is unchanged
+  const isUnchanged =
+    data.name === patient.name &&
+    data.phone === patient.phone &&
+    data.town === patient.town &&
+    data.age === patient.age;
+
+
     const handleUpdate = (e: React.FormEvent) => {
         e.preventDefault();
         // console.log(data)
@@ -115,7 +123,7 @@ export default function Edit({patient} : Props) {
                             {errors.age && <p className="text-red-500 text-sm">{errors.age}</p>}
                         </div>
 
-                        <Button type="submit" disabled={processing} className="w-full">
+                        <Button type="submit" disabled={processing || isUnchanged} className="w-full">
                             Update Patient
                         </Button>
                     </form>
