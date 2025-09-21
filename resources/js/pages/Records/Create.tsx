@@ -132,7 +132,7 @@ export default function Create() {
                                     step="0.01"
                                     value={data.price}
                                     onChange={(e) => setData('price', e.target.value)}
-                                    placeholder="Enter price"
+                                    placeholder="Enter price (MMK)"
                                 />
                                 {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
                             </div>

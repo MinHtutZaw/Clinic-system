@@ -14,16 +14,21 @@ class RecordController extends Controller
      * Display a listing of the resource.
      */
 
-    public function index()
+    public function index(Request $request)
     {
-        $records = Record::with(['patient', 'product'])->get();
-
+        $records = Record::with(['patient', 'product'])
+            ->search($request->input('search'))
+            ->orderBy('created_at', 'desc')
+            ->paginate(2)
+            ->withQueryString();
 
         return inertia('Records/Index', [
             'records' => $records,
-            
+            'filters' => $request->only('search'),
         ]);
     }
+
+
     /**
      * Show the form for creating a new resource.
      */

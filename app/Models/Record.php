@@ -9,13 +9,25 @@ class Record extends Model
 {
     /** @use HasFactory<\Database\Factories\RecordFactory> */
     use HasFactory;
-      protected $fillable = [
+    protected $fillable = [
         'patient_id',
         'product_id',
         'duration',
         'price',
-       
+
     ];
+
+    public function scopeSearch($query, $search)
+    {
+        if ($search) {
+            $query->whereHas('patient', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            });
+        }
+    }
+
+
+
 
 
     public function patient()

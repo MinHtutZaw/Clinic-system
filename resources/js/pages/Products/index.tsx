@@ -183,8 +183,8 @@ export default function Index() {
                 </div>
 
 
-                <Pagination>
-                    <PaginationContent>
+                <Pagination className='justify-center m-3'>
+                    <PaginationContent >
                         {products.links.map((link, i) => (
                             <PaginationItem key={i}>
                                 {link.url ? (
