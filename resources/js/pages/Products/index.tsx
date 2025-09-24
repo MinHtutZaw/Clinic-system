@@ -1,11 +1,9 @@
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { Megaphone, SquarePen, Trash2 } from 'lucide-react';
-
-import { route } from 'ziggy-js'
+import { route } from 'ziggy-js';
 import {
     Table,
     TableBody,
@@ -21,8 +19,6 @@ import {
     PaginationEllipsis,
     PaginationItem,
     PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
 } from "@/components/ui/pagination"
 
 import {
@@ -37,16 +33,19 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
+import { toast } from "sonner"
+import { useEffect } from "react"
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Products',
         href: '/products',
     },
 ];
+
 interface Product {
     id: number;
     name: string;
-
     description: string;
 }
 
@@ -70,126 +69,111 @@ interface PageProps {
     products: PaginatedProducts;
 }
 
-type AlertVariant = "default" | "destructive" | "success"; //  "success"
-
-interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
-    variant?: AlertVariant;
-}
-
 export default function Index() {
-
     const { products, flash } = usePage().props as unknown as PageProps;
-
     const { processing, delete: destroy } = useForm();
 
+    // ✅ Show toast when flash message is set
+    useEffect(() => {
+        if (flash?.message) {
+            toast.success(flash.message, {
+                icon: <Megaphone className="w-5 h-5" />,
+                className: "  text-white rounded-lg shadow-lg",
+                style: { width: '30rem' } 
 
-    const handleDelete = (id: number, name: string) => {
+            });
+        }
+    }, [flash?.message]);
+    
 
+    const handleDelete = (id: number) => {
         destroy(route('products.destroy', id));
-
     }
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Products" />
+
             <div className='m-4 p-4 flex justify-between'>
                 <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Products List</h1>
-                <Link href={route('products.create')}><Button>Add new Products</Button></Link>
+                <Link href={route('products.create')}>
+                    <Button>Add new Products</Button>
+                </Link>
             </div>
 
-            {/* Flash  Notification*/}
             <div className="m-4 p-4 flex flex-col gap-4">
-
-                {flash.message && (
-                    <Alert className="flex items-center">
-                        <Megaphone className="w-5 h-5 mr-2" />
-                        <div>
-                            <AlertTitle>Success!</AlertTitle>
-                            <AlertDescription>{flash.message}</AlertDescription>
-                        </div>
-                    </Alert>
-                )}
-
-
-                <div className="m-4 ">
+                <div className="m-4">
                     {products.data.length > 0 && (
                         <Table>
-
                             <TableHeader>
                                 <TableRow>
                                     <TableHead className="w-[100px]">ID</TableHead>
                                     <TableHead>Name</TableHead>
-                                  
                                     <TableHead>Description</TableHead>
-                                   
                                     <TableHead>Action</TableHead>
                                 </TableRow>
                             </TableHeader>
 
                             <TableBody>
-                                {products.data.map(
-                                    (product) => (
-                                        <TableRow>
-                                            <TableCell className="font-medium">{product.id} </TableCell>
-                                            <TableCell>{product.name} </TableCell>
-                                          
-                                            <TableCell>
-                                                {product.description.length > 50
-                                                    ? product.description.substring(0, 50) + "..."
-                                                    : product.description}
-                                            </TableCell>
-                                            
+                                {products.data.map((product) => (
+                                    <TableRow key={product.id}>
+                                        <TableCell className="font-medium">{product.id}</TableCell>
+                                        <TableCell>{product.name}</TableCell>
+                                        <TableCell>
+                                            {product.description.length > 50
+                                                ? product.description.substring(0, 50) + "..."
+                                                : product.description}
+                                        </TableCell>
 
-                                            <TableCell className="space-x-2">
-                                                <Link href={route('products.edit', product.id)}> <button className='text-blue-400 hover:text-blue-800'>  <SquarePen /></button></Link>
-                                                {/* Delete with AlertDialog */}
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <button
-                                                            className="text-red-400 hover:text-red-800"
+                                        <TableCell className="space-x-2">
+                                            <Link href={route('products.edit', product.id)}>
+                                                <button className='text-blue-400 hover:text-blue-800'>
+                                                    <SquarePen />
+                                                </button>
+                                            </Link>
+
+                                            {/* Delete with AlertDialog */}
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <button
+                                                        className="text-red-400 hover:text-red-800"
+                                                        disabled={processing}
+                                                    >
+                                                        <Trash2 />
+                                                    </button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>
+                                                            Delete product
+                                                        </AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            Are you sure you want to delete{" "}
+                                                            <span className="font-semibold">{product.name}</span>? This action cannot be undone.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction
+                                                            onClick={() => handleDelete(product.id)}
+                                                            className="bg-red-700 text-white hover:bg-red-600"
                                                             disabled={processing}
                                                         >
-                                                            <Trash2 />
-                                                        </button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>
-                                                                Delete product
-                                                            </AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                Are you sure you want to delete{" "}
-                                                                <span className="font-semibold">
-                                                                    {product.name}
-                                                                </span>
-                                                                ? This action cannot be undone.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                onClick={() =>
-                                                                    handleDelete(product.id, product.name)
-                                                                }
-                                                                className="bg-red-700 text-white hover:bg-red-600"
-                                                                disabled={processing}
-                                                            >
-                                                                Confirm
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </TableCell>
-                                        </TableRow>
-                                    )
-                                )}
+                                                            Confirm
+                                                        </AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
                             </TableBody>
                         </Table>
                     )}
                 </div>
 
-
                 <Pagination className='justify-center m-3'>
-                    <PaginationContent >
+                    <PaginationContent>
                         {products.links.map((link, i) => (
                             <PaginationItem key={i}>
                                 {link.url ? (
@@ -205,15 +189,7 @@ export default function Index() {
                         ))}
                     </PaginationContent>
                 </Pagination>
-
-
             </div>
-
-
-
-
-
-
         </AppLayout>
     );
 }

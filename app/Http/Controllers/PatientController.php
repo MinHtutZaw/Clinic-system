@@ -17,12 +17,12 @@ class PatientController extends Controller
 
         // Get all unique towns and ages for filter dropdowns
         $allTowns = Patient::select('town')->distinct()->pluck('town');
-        $allAges = Patient::select('age')->distinct()->pluck('age');
+    
 
         return Inertia::render('Patients/index', [
             'patients' => $patients,
             'allTowns' => $allTowns,
-            'allAges' => $allAges,
+           
         ]);
     }
     public function create()

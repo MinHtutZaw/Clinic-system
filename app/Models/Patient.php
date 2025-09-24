@@ -30,7 +30,20 @@ class Patient extends Model
         });
 
         $query->when($filters['age'] ?? false, function ($query, $age) {
-            $query->where('age', $age);
+          switch ($age) {
+            case '<40':
+                $query->where('age', '<', 40);
+                break;
+            case '40-50':
+                $query->whereBetween('age', [40, 50]);
+                break;
+            case '50-60':
+                $query->whereBetween('age', [50, 60]);
+                break;
+            case '>60':
+                $query->where('age', '>', 60);
+                break;
+        }
         });
     }
 

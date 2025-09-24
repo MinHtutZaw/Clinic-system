@@ -21,7 +21,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 interface Product {
     id :number
     name: string,
-    price: string,
+   
     description: string,
 };
 interface Props{
@@ -32,13 +32,13 @@ interface Props{
 export default function Edit({product} : Props) {
     const { data, setData, put, processing, errors } = useForm({
         name: product.name,
-        price : product.price,
+       
         description : product.description,
     });
        // ✅ check if form data is unchanged
   const isUnchanged =
     data.name === product.name &&
-    data.price === product.price &&
+   
     data.description === product.description ;
 
 
@@ -85,17 +85,7 @@ export default function Edit({product} : Props) {
 
 
                      
-                        <div>
-                            <Label htmlFor="price">Price</Label>
-                            <Input
-                                id="price"
-                                type="number"
-                                value={data.price}
-                                onChange={(e) => setData('price', (e.target.value))}
-                                placeholder="Enter price"
-                            />
-                            {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
-                        </div>
+                      
 
                         <div>
                             <Label htmlFor="description">Description</Label>
@@ -105,7 +95,7 @@ export default function Edit({product} : Props) {
                                 onChange={(e) => setData('description', e.target.value)}
                                 placeholder="Enter description"
                             />
-                            {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
+                            {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
                         </div>
 
                         <Button type="submit" disabled={processing || isUnchanged} className="w-full">

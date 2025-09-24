@@ -46,7 +46,7 @@ interface Patient {
     town: string;
     age: number;
     free_trials: number;
-    role :string
+    role: string
 }
 
 interface PaginationLink {
@@ -68,11 +68,19 @@ interface PageProps {
     flash: { message?: string };
     patients: PaginatedPatients;
 }
-
+const ageRanges = [
+    { label: "< 40", value: "<40" },
+    { label: "40 - 50", value: "40-50" },
+    { label: "50 - 60", value: "50-60" },
+    { label: "> 60", value: ">60" },
+];
 export default function Index() {
-    const { patients, flash, allTowns, allAges } = usePage().props as unknown as PageProps & {
+
+
+
+    const { patients, flash, allTowns } = usePage().props as unknown as PageProps & {
         allTowns: string[];
-        allAges: number[];
+
     };
 
     const { processing, delete: destroy } = useForm();
@@ -146,13 +154,14 @@ export default function Index() {
                     </SelectContent>
                 </Select>
 
+                
                 <Select value={selectedAge} onValueChange={setSelectedAge}>
                     <SelectTrigger>
                         <SelectValue placeholder="Filter by Age" />
                     </SelectTrigger>
                     <SelectContent>
-                        {allAges.map((age) => (
-                            <SelectItem key={age} value={String(age)}>{age}</SelectItem>
+                        {ageRanges.map((range) => (
+                            <SelectItem key={range.value} value={range.value}>{range.label}</SelectItem>
                         ))}
                     </SelectContent>
                 </Select>
@@ -178,7 +187,7 @@ export default function Index() {
                                 <TableHead>Town</TableHead>
                                 <TableHead>Age</TableHead>
                                 <TableHead>Trials left</TableHead>
-                                 <TableHead>User role</TableHead>
+                                <TableHead>User role</TableHead>
                                 <TableHead>Action</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -196,7 +205,7 @@ export default function Index() {
                                     <TableCell>
                                         {patient.role === "vvip" ? "----" : patient.free_trials}
                                     </TableCell>
-                                      <TableCell>{patient.role}</TableCell>
+                                    <TableCell>{patient.role}</TableCell>
 
                                     <TableCell>
                                         <Link href={route('patients.edit', patient.id)}>
