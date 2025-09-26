@@ -14,6 +14,19 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+} from "@/components/ui/command"
+
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Treatment Records', href: '/records/create' },
@@ -23,7 +36,7 @@ interface Patient {
     id: number;
     name: string;
     free_trials: number;
-    role :string
+    role: string
 }
 
 interface Product {
@@ -80,25 +93,42 @@ export default function Create() {
 
 
 
-
-                        {/* Patient Select */}
+                        {/* Patient Combobox */}
                         <div>
-                            <Label htmlFor="patient_id">Select Patient</Label>
-                            <Select
-                                value={data.patient_id}
-                                onValueChange={(value) => setData("patient_id", value)}
-                            >
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder=" Choose Patient " />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {patients.map((p) => (
-                                        <SelectItem key={p.id} value={String(p.id)}>
-                                            {p.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <Label htmlFor="patient_id">Search Patient</Label>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        role="combobox"
+                                        className="w-full justify-between"
+                                    >
+                                        {data.patient_id
+                                            ? (() => {
+                                                const selected = patients.find((p) => String(p.id) === data.patient_id);
+                                                return selected ? `${selected.name} (ID: ${selected.id})` : "Enter patient name";
+                                            })()
+                                            : "Select patient name"}
+
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-[300px] p-0">
+                                    <Command>
+                                        <CommandInput placeholder="Search patient..." />
+                                        <CommandEmpty>No patient found.</CommandEmpty>
+                                        <CommandGroup>
+                                            {patients.map((p) => (
+                                                <CommandItem
+                                                    key={p.id}
+                                                    onSelect={() => setData("patient_id", String(p.id))}
+                                                >
+                                                    {p.name} (ID: {p.id})
+                                                </CommandItem>
+                                            ))}
+                                        </CommandGroup>
+                                    </Command>
+                                </PopoverContent>
+                            </Popover>
                             {errors.patient_id && (
                                 <p className="text-red-500 text-sm">{errors.patient_id}</p>
                             )}
