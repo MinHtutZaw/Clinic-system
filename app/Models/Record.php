@@ -14,8 +14,19 @@ class Record extends Model
         'product_id',
         'duration',
         'price',
+        'status',
+        'voucher_path',
 
     ];
+
+    protected $appends = ['voucher_url'];
+
+    public function getVoucherUrlAttribute()
+    {
+        return $this->voucher_path
+            ? asset('storage/' . $this->voucher_path)
+            : null;
+    }
 
     public function scopeSearch($query, $search)
     {

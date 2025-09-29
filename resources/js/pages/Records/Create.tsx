@@ -59,11 +59,13 @@ export default function Create() {
         product_id: '',
         duration: '15', // default 15 min
         price: '',
+        status: 'Trial',       // 
+        voucher: null as File | null, // 
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('records.store')); // Laravel route to RecordController@store
+        post(route('records.store'), { forceFormData: true }); // Laravel route to RecordController@store
     };
 
     return (
@@ -206,6 +208,27 @@ export default function Create() {
                             }
                             return null;
                         })()}
+
+
+                        {/* Voucher */}
+                        <div>
+                            <Label htmlFor="voucher">Voucher Upload</Label>
+                            <Input
+                                id="voucher"
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) =>
+                                    setData("voucher", e.target.files ? e.target.files[0] : null)
+                                }
+                            />
+                            {errors.voucher && (
+                                <p className="text-red-500 text-sm">{errors.voucher}</p>
+                            )}
+                        </div>
+
+
+
+
 
 
                         {/* Submit */}

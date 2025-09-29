@@ -17,8 +17,12 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->integer('duration'); // minutes
             $table->decimal('price', 10, 2);
-            // $table->decimal('discount', 5, 2)->default(0); // staff discount %
+
+            $table->string('voucher_path')->nullable();
+            $table->enum('status', ['Trial', 'Paid', 'VVIP'])->default('Trial');
             
+            // $table->decimal('discount', 5, 2)->default(0); // staff discount %
+
             $table->timestamps();
         });
     }

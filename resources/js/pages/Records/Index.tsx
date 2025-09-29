@@ -48,6 +48,9 @@ interface Record {
     product: Product;
     duration: number;
     price: string;
+    status: "Trial" | "Paid" | "VVIP";
+    voucher_path?: string | null;
+    voucher_url?: string | null;
     created_at: string;
 }
 
@@ -149,6 +152,8 @@ export default function Index() {
                                     <TableHead>Product</TableHead>
                                     <TableHead>Duration</TableHead>
                                     <TableHead>Price</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead>Voucher</TableHead>
                                     <TableHead>Time</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -164,6 +169,41 @@ export default function Index() {
                                         </TableCell>
                                         <TableCell>{record.duration} min</TableCell>
                                         <TableCell>{record.price} MMK</TableCell>
+
+
+
+                                        <TableCell>
+                                            <span
+                                                className={`px-2 py-1 rounded text-xs font-semibold ${record.status === "VVIP"
+                                                    ? "bg-purple-200 text-purple-800"
+                                                    : record.status === "Paid"
+                                                        ? "bg-green-200 text-green-800"
+
+                                                        : "bg-gray-200 text-gray-800"
+                                                    }`}
+                                            >
+                                                {record.status}
+                                            </span>
+                                        </TableCell>
+
+                                        {/* ✅ Voucher column */}
+                                        <TableCell>
+                                            {record.voucher_url ? (
+                                                <a
+                                                    href={record.voucher_url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-blue-600 hover:underline"
+                                                >
+                                                    View Voucher
+                                                </a>
+                                            ) : (
+                                                <span className="text-gray-400">No voucher</span>
+                                            )}
+                                        </TableCell>
+
+
+
                                         <TableCell>
                                             {new Intl.DateTimeFormat("en-US", {
                                                 year: "numeric",
