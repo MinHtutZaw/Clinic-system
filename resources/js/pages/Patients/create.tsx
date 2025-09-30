@@ -11,6 +11,7 @@ import { BadgeAlert, Terminal } from 'lucide-react';
 import { route } from 'ziggy-js';
 
 const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Patients', href: '/patients' },
     {
         title: 'Register Form for Patient',
         href: '/patients/create',

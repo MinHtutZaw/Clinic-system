@@ -37,7 +37,7 @@ import { useState } from 'react';
 import expenses from '@/routes/expenses';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'expenses', href: '/expenses' },
+    { title: 'Expenses', href: '/expenses' },
 ];
 
 interface Expense {

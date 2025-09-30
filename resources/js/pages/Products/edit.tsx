@@ -13,6 +13,10 @@ import { route } from 'ziggy-js';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
+        title: 'Products',
+        href: '/products',
+    },
+    {
         title: 'Update Product Information',
         href: '/products/{product}/edit',
     },

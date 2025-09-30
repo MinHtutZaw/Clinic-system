@@ -19,7 +19,7 @@ class RecordController extends Controller
         $records = Record::with(['patient', 'product'])
             ->search($request->input('search'))
             ->orderBy('created_at', 'desc')
-            ->paginate(2)
+            ->paginate(10)
             ->withQueryString();
 
         return inertia('Records/Index', [
