@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Expense;
+use App\Models\Product;
 use App\Models\Record;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,19 +22,14 @@ class DashboardController extends Controller
 
     public function getdashboarddata(Request $request)
     {
-        // 🧮 1. Expenses grouped by date
         $expenses = Expense::selectRaw('DATE(created_at) as date, SUM(amount) as total_amount')
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->pluck('total_amount', 'date');
-
-        // 🧮 2. Income grouped by date
         $income = Record::selectRaw('DATE(created_at) as date, SUM(price) as total_amount')
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->pluck('total_amount', 'date');
-
-        // 📅 3. Merge into one array for daily summary
         $dates = collect($expenses->keys())
             ->merge($income->keys())
             ->unique()
@@ -46,8 +42,6 @@ class DashboardController extends Controller
                 'income' => $income[$date] ?? 0,
             ];
         })->values();
-
-        // 💎 4. Product totals (not by date)
         $productData = Record::select(
             'product_id',
             DB::raw('SUM(price) as total_amount'),
@@ -65,10 +59,20 @@ class DashboardController extends Controller
                     'fill' => $colorVar,
                 ];
             });
+        $incomePrice = Record::sum('price');
+        $expensePrice = Expense::sum('amount');
+        $profit = $incomePrice - $expensePrice;
+        $mostUsedProductId = Record::select('product_id', DB::raw('COUNT(*) as total'))
+            ->groupBy('product_id')
+            ->orderByDesc('total')
+            ->value('product_id');
 
+        $mostUsedProduct = Product::find($mostUsedProductId);
         return response()->json([
             'daily' => $dailyData,
             'products' => $productData,
+            'profit' => $profit,
+            'mostUsedProduct' => $mostUsedProduct,
         ]);
     }
     /**

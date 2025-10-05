@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
@@ -6,7 +6,6 @@ import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import axios from 'axios';
-import { TrendingUp } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Area, AreaChart, CartesianGrid, Cell, Pie, PieChart, XAxis } from 'recharts';
 
@@ -36,7 +35,8 @@ export default function Dashboard() {
     const [timeRange, setTimeRange] = React.useState('90d');
     const [chartData, setChartData] = useState([]);
     const [chartData1, setChartData1] = useState([]);
-
+    const [profit, setProfit] = useState(0);
+    const [product, setProduct] = useState<any>();
     const filteredData = chartData.filter((item) => {
         const date = new Date(item.date);
         const referenceDate = new Date('2024-06-30');
@@ -71,7 +71,8 @@ export default function Dashboard() {
                     total_duration: Number(p.total_duration),
                     fill: getRandomPastelLavender(),
                 }));
-
+                setProfit(res.data.profit);
+                setProduct(res.data.mostUsedProduct);
                 setChartData1(chartData1);
             })
             .catch((err) => console.error(err));
@@ -81,6 +82,27 @@ export default function Dashboard() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
+            <div className="mt-4 grid grid-cols-2 gap-4 px-2">
+                <Card className="flex w-full flex-col">
+                    <CardHeader>
+                        <CardTitle>Profit Overview</CardTitle>
+                    </CardHeader>
+
+                    <CardContent className="flex flex-1 flex-col gap-2 overflow-y-auto">
+                        <span className={profit < 0 ? 'font-semibold text-red-500' : 'font-semibold text-green-400'}>
+                            {profit.toLocaleString()} MMK
+                        </span>
+                    </CardContent>
+                </Card>
+
+                <Card className="flex w-full flex-col">
+                    <CardHeader>
+                        <CardTitle>Most Used Products</CardTitle>
+                    </CardHeader>
+
+                    <CardContent className="flex flex-1 flex-col gap-2 overflow-y-auto">{product?.name}</CardContent>
+                </Card>
+            </div>
             <Card className="mx-2 mt-4 pt-0">
                 <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
                     <div className="grid flex-1 gap-1">
@@ -191,14 +213,6 @@ export default function Dashboard() {
                             </PieChart>
                         </ChartContainer>
                     </CardContent>
-
-                    <CardFooter className="flex-col gap-2 text-sm">
-                        <div className="flex items-center gap-2 leading-none font-medium">
-                            Trending up by 12.4% this month
-                            <TrendingUp className="h-4 w-4" />
-                        </div>
-                        <div className="leading-none text-muted-foreground">Showing total product income for the last period</div>
-                    </CardFooter>
                 </Card>
                 <Card className="flex w-full flex-col">
                     <CardHeader>
