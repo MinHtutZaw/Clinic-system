@@ -266,6 +266,7 @@ function ChartLegendContent({
   if (!payload?.length) {
     return null
   }
+console.log(payload);
 
   return (
     <div
