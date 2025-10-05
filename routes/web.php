@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\PatientController;
@@ -19,6 +20,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
+    //Dashboard
+    Route::post('/getdashboarddata', [DashboardController::class, 'getdashboarddata'])->name('getdashboarddata');
     //patient
 
     Route::get('/patients', [PatientController::class, 'index'])->name('patients.index');
