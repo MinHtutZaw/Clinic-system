@@ -123,6 +123,8 @@ export default function Create() {
                                                 <CommandItem
                                                     key={p.id}
                                                     onSelect={() => setData("patient_id", String(p.id))}
+
+                                                    className='auto-complete-off'
                                                 >
                                                     {p.name} (ID: {p.id})
                                                 </CommandItem>

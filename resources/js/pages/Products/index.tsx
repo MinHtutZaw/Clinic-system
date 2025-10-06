@@ -101,7 +101,7 @@ export default function Index() {
                 </Link>
             </div>
 
-            <div className="m-4 p-4 flex flex-col gap-4">
+            <div className="m-4">
                 <div className="m-4">
                     {products.data.length > 0 && (
                         <Table>

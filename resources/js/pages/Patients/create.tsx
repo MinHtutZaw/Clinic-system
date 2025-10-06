@@ -23,7 +23,7 @@ export default function Create() {
         phone: '',
         town: '',
         age: '',
-        role : 'normal',
+        role: 'normal',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -61,7 +61,9 @@ export default function Create() {
                                 id="name"
                                 type="text"
                                 value={data.name}
+                                autoComplete="off"
                                 onChange={(e) => setData('name', e.target.value)}
+                                className='auto-complete-off'
                                 placeholder="Enter patient name"
                             />
                             {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
@@ -72,6 +74,7 @@ export default function Create() {
                             <Input
                                 id="phone"
                                 type="text"
+                                autoComplete="off"
                                 value={data.phone}
                                 onChange={(e) => setData('phone', e.target.value)}
                                 placeholder="Enter phone number"
@@ -84,6 +87,7 @@ export default function Create() {
                             <Input
                                 id="town"
                                 type="text"
+                                autoComplete="off"
                                 value={data.town}
                                 onChange={(e) => setData('town', e.target.value)}
                                 placeholder="Enter town"
@@ -115,7 +119,7 @@ export default function Create() {
                                 <SelectContent>
                                     <SelectItem value="normal">Normal</SelectItem>
                                     <SelectItem value="vvip">VVIP</SelectItem>
-                                   
+
                                 </SelectContent>
                             </Select>
                             {errors.role && <p className="text-red-500 text-sm">{errors.role}</p>}

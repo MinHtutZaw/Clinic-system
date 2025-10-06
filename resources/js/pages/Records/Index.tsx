@@ -89,17 +89,18 @@ export default function Index() {
             <Head title="Records" />
 
             {/* 🔎 Header with Search */}
-            <div className="m-4 p-4 flex flex-col md:flex-row justify-between items-center gap-4">
-                <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+            <div className="m-4 p-4 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-gray-200 dark:border-gray-700">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                     Records List
                 </h1>
-                <div className="flex items-center space-x-2">
-
-                    <Link href={route("records.create")}>
-                        <Button>Add Record</Button>
-                    </Link>
-                </div>
+                <Link href={route("records.create")}>
+                    <Button className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md hover:opacity-90">
+                        Add Record
+                    </Button>
+                </Link>
             </div>
+
+            {/* Search Box */}
             <div className="m-4 flex justify-center">
                 <form
                     onSubmit={handleSearch}
@@ -110,14 +111,15 @@ export default function Index() {
                         name="search"
                         placeholder="Search by patient name..."
                         defaultValue={filters.search ?? ""}
-                        className="flex-grow"
+                        className="flex-grow rounded-md"
                     />
-                    <Button type="submit">Search</Button>
+                    <Button type="submit" className="shadow-md">Search</Button>
                     {filters.search && (
                         <Button
                             type="button"
                             variant="outline"
                             onClick={() => router.get(route("records.index"))}
+                            className="border-gray-400"
                         >
                             Clear
                         </Button>
@@ -125,117 +127,100 @@ export default function Index() {
                 </form>
             </div>
 
-
-
-            {/* ✅ Flash Notification */}
+            {/* Flash Notification */}
             {flash.message && (
-                <div className="m-4">
-                    <Alert className="flex items-center">
-                        <Megaphone className="w-5 h-5 mr-2" />
+                <div className="m-4 animate-fade-in">
+                    <Alert className="flex items-center bg-green-50 border-l-4 border-green-500 rounded-md shadow">
+                        <Megaphone className="w-6 h-6 text-green-600 mr-2" />
                         <div>
-                            <AlertTitle>Success!</AlertTitle>
-                            <AlertDescription>{flash.message}</AlertDescription>
+                            <AlertTitle className="font-bold text-green-800">Success!</AlertTitle>
+                            <AlertDescription className="text-green-700">{flash.message}</AlertDescription>
                         </div>
                     </Alert>
                 </div>
             )}
 
-            {/* 📋 Records Table */}
-            <div className="m-4">
-                {records.data.length > 0 ? (
-                    <>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>ID</TableHead>
-                                    <TableHead>Patient</TableHead>
-                                    <TableHead>Product</TableHead>
-                                    <TableHead>Duration</TableHead>
-                                    <TableHead>Price</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead>Voucher</TableHead>
-                                    <TableHead>Time</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {records.data.map((record) => (
-                                    <TableRow key={record.id}>
-                                        <TableCell>{record.id}</TableCell>
-                                        <TableCell>
-                                            {record.patient?.name ?? "Unknown"}
-                                        </TableCell>
-                                        <TableCell>
-                                            {record.product?.name ?? "Unknown"}
-                                        </TableCell>
-                                        <TableCell>{record.duration} min</TableCell>
-                                        <TableCell>{record.price} MMK</TableCell>
+            {/* Table */}
+            <div className="m-4 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700">
+                <Table>
+                    <TableHeader className="bg-gray-100 dark:bg-gray-800">
+                        <TableRow>
+                            <TableHead className="font-semibold">ID</TableHead>
+                            <TableHead>Patient</TableHead>
+                            <TableHead>Product</TableHead>
+                            <TableHead>Duration</TableHead>
+                            <TableHead>Price</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Voucher</TableHead>
+                            <TableHead>Time</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {records.data.map((record) => (
+                            <TableRow
+                                key={record.id}
+                                className="hover:bg-gray-50 dark:hover:bg-gray-800 transition"
+                            >
+                                <TableCell>{record.id}</TableCell>
+                                <TableCell>{record.patient?.name ?? "Unknown"}</TableCell>
+                                <TableCell>{record.product?.name ?? "Unknown"}</TableCell>
+                                <TableCell>{record.duration} min</TableCell>
+                                <TableCell>{record.price} MMK</TableCell>
 
+                                {/* Status Badge */}
+                                <TableCell>
+                                    <span
+                                        className={`px-3 py-1 rounded-full text-xs font-medium ${record.status === "VVIP"
+                                                ? "bg-purple-100 text-purple-700"
+                                                : record.status === "Paid"
+                                                    ? "bg-green-100 text-green-700"
+                                                    : "bg-gray-100 text-gray-700"
+                                            }`}
+                                    >
+                                        {record.status}
+                                    </span>
+                                </TableCell>
 
+                                <TableCell>
+                                    {record.voucher_url ? (
+                                        <a
+                                            href={record.voucher_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-600 hover:underline"
+                                        >
+                                            View Voucher
+                                        </a>
+                                    ) : (
+                                        <span className="text-gray-400">No voucher</span>
+                                    )}
+                                </TableCell>
 
-                                        <TableCell>
-                                            <span
-                                                className={`px-2 py-1 rounded text-xs font-semibold ${record.status === "VVIP"
-                                                    ? "bg-purple-200 text-purple-800"
-                                                    : record.status === "Paid"
-                                                        ? "bg-green-200 text-green-800"
-
-                                                        : "bg-gray-200 text-gray-800"
-                                                    }`}
-                                            >
-                                                {record.status}
-                                            </span>
-                                        </TableCell>
-
-                                        {/* ✅ Voucher column */}
-                                        <TableCell>
-                                            {record.voucher_url ? (
-                                                <a
-                                                    href={record.voucher_url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-blue-600 hover:underline"
-                                                >
-                                                    View Voucher
-                                                </a>
-                                            ) : (
-                                                <span className="text-gray-400">No voucher</span>
-                                            )}
-                                        </TableCell>
-
-
-
-                                        <TableCell>
-                                            {new Intl.DateTimeFormat("en-US", {
-                                                year: "numeric",
-                                                month: "short",
-                                                day: "2-digit",
-                                                hour: "2-digit",
-                                                minute: "2-digit",
-                                            }).format(new Date(record.created_at))}
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </>
-                ) : (
-                    <div className="text-center py-12">
-                        <p className="text-gray-500 dark:text-gray-400 text-lg">
-                            No records found.
-                        </p>
-                    </div>
-                )}
+                                <TableCell>
+                                    {new Intl.DateTimeFormat("en-US", {
+                                        year: "numeric",
+                                        month: "short",
+                                        day: "2-digit",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                    }).format(new Date(record.created_at))}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
             </div>
 
-            {/* 📑 Pagination */}
-            <Pagination>
-                <PaginationContent>
+            {/* Pagination */}
+            <Pagination className="my-6">
+                <PaginationContent className="space-x-2">
                     {records.links.map((link, i) => (
                         <PaginationItem key={i}>
                             {link.url ? (
                                 <PaginationLink
                                     href={link.url}
                                     isActive={link.active}
+                                    className="px-3 py-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition"
                                     dangerouslySetInnerHTML={{ __html: link.label }}
                                 />
                             ) : (
@@ -245,6 +230,7 @@ export default function Index() {
                     ))}
                 </PaginationContent>
             </Pagination>
+
         </AppLayout>
     );
 }
