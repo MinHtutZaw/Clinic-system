@@ -12,7 +12,7 @@ class PatientController extends Controller
     {
         $patients = Patient::orderBy('id', 'desc')
             ->filter($request->only(['search', 'town', 'age']))
-            ->paginate(2)
+            ->paginate(10)
             ->withQueryString();
 
         // Get all unique towns and ages for filter dropdowns

@@ -1,34 +1,21 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { BadgeAlert } from 'lucide-react';
 import { route } from 'ziggy-js';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-} from "@/components/ui/command"
-
 
 const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Records',
+        href: '/records',
+    },
     { title: 'Treatment Records', href: '/records/create' },
 ];
 
@@ -36,14 +23,13 @@ interface Patient {
     id: number;
     name: string;
     free_trials: number;
-    role: string
+    role: string;
 }
 
 interface Product {
     id: number;
     name: string;
 }
-
 
 interface PageProps {
     patients: Patient[];
@@ -59,8 +45,8 @@ export default function Create() {
         product_id: '',
         duration: '15', // default 15 min
         price: '',
-        status: 'Trial',       // 
-        voucher: null as File | null, // 
+        status: 'Trial', //
+        voucher: null as File | null, //
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -73,10 +59,9 @@ export default function Create() {
             <Head title="Add Treatment Record" />
 
             <div className="m-4 p-4">
-                <h1 className="text-xl font-semibold mb-4 text-center">Add Treatment Record</h1>
+                <h1 className="mb-4 text-center text-xl font-semibold">Add Treatment Record</h1>
                 <div className="flex justify-center">
-                    <form onSubmit={handleSubmit} className="space-y-4 max-w-md w-full">
-
+                    <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
                         {/* Error messages */}
                         {Object.keys(errors).length > 0 && (
                             <Alert>
@@ -92,26 +77,18 @@ export default function Create() {
                             </Alert>
                         )}
 
-
-
-
                         {/* Patient Combobox */}
                         <div>
                             <Label htmlFor="patient_id">Search Patient</Label>
                             <Popover>
                                 <PopoverTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        role="combobox"
-                                        className="w-full justify-between"
-                                    >
+                                    <Button variant="outline" role="combobox" className="w-full justify-between">
                                         {data.patient_id
                                             ? (() => {
-                                                const selected = patients.find((p) => String(p.id) === data.patient_id);
-                                                return selected ? `${selected.name} (ID: ${selected.id})` : "Enter patient name";
-                                            })()
-                                            : "Select patient name"}
-
+                                                  const selected = patients.find((p) => String(p.id) === data.patient_id);
+                                                  return selected ? `${selected.name} (ID: ${selected.id})` : 'Enter patient name';
+                                              })()
+                                            : 'Select patient name'}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-[300px] p-0">
@@ -123,8 +100,6 @@ export default function Create() {
                                                 <CommandItem
                                                     key={p.id}
                                                     onSelect={() => setData("patient_id", String(p.id))}
-
-                                                    className='auto-complete-off'
                                                 >
                                                     {p.name} (ID: {p.id})
                                                 </CommandItem>
@@ -133,18 +108,13 @@ export default function Create() {
                                     </Command>
                                 </PopoverContent>
                             </Popover>
-                            {errors.patient_id && (
-                                <p className="text-red-500 text-sm">{errors.patient_id}</p>
-                            )}
+                            {errors.patient_id && <p className="text-sm text-red-500">{errors.patient_id}</p>}
                         </div>
 
                         {/* Product Select */}
                         <div>
                             <Label htmlFor="product_id">Select Product</Label>
-                            <Select
-                                value={data.product_id}
-                                onValueChange={(value) => setData("product_id", value)}
-                            >
+                            <Select value={data.product_id} onValueChange={(value) => setData('product_id', value)}>
                                 <SelectTrigger className="w-full">
                                     <SelectValue placeholder=" Choose Product " />
                                 </SelectTrigger>
@@ -156,18 +126,13 @@ export default function Create() {
                                     ))}
                                 </SelectContent>
                             </Select>
-                            {errors.product_id && (
-                                <p className="text-red-500 text-sm">{errors.product_id}</p>
-                            )}
+                            {errors.product_id && <p className="text-sm text-red-500">{errors.product_id}</p>}
                         </div>
 
                         {/* Duration Select */}
                         <div>
                             <Label htmlFor="duration">Duration</Label>
-                            <Select
-                                value={data.duration}
-                                onValueChange={(value) => setData("duration", value)}
-                            >
+                            <Select value={data.duration} onValueChange={(value) => setData('duration', value)}>
                                 <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Choose duration" />
                                 </SelectTrigger>
@@ -177,20 +142,16 @@ export default function Create() {
                                     <SelectItem value="60">1 hour</SelectItem>
                                 </SelectContent>
                             </Select>
-                            {errors.duration && (
-                                <p className="text-red-500 text-sm">{errors.duration}</p>
-                            )}
+                            {errors.duration && <p className="text-sm text-red-500">{errors.duration}</p>}
                         </div>
 
                         {/* Price - only show if no free trials AND not VVIP */}
                         {(() => {
-                            const selectedPatient = patients.find(
-                                (p) => p.id.toString() === data.patient_id
-                            );
+                            const selectedPatient = patients.find((p) => p.id.toString() === data.patient_id);
                             if (!selectedPatient) return null;
 
                             // Only show price if patient is NOT vvip AND free_trials == 0
-                            if (selectedPatient.role !== "vvip" && selectedPatient.free_trials === 0) {
+                            if (selectedPatient.role !== 'vvip' && selectedPatient.free_trials === 0) {
                                 return (
                                     <div>
                                         <Label htmlFor="price">Price</Label>
@@ -199,18 +160,15 @@ export default function Create() {
                                             type="number"
                                             step="0.01"
                                             value={data.price}
-                                            onChange={(e) => setData("price", e.target.value)}
+                                            onChange={(e) => setData('price', e.target.value)}
                                             placeholder="Enter price (MMK)"
                                         />
-                                        {errors.price && (
-                                            <p className="text-red-500 text-sm">{errors.price}</p>
-                                        )}
+                                        {errors.price && <p className="text-sm text-red-500">{errors.price}</p>}
                                     </div>
                                 );
                             }
                             return null;
                         })()}
-
 
                         {/* Voucher */}
                         <div>
@@ -219,19 +177,10 @@ export default function Create() {
                                 id="voucher"
                                 type="file"
                                 accept="image/*"
-                                onChange={(e) =>
-                                    setData("voucher", e.target.files ? e.target.files[0] : null)
-                                }
+                                onChange={(e) => setData('voucher', e.target.files ? e.target.files[0] : null)}
                             />
-                            {errors.voucher && (
-                                <p className="text-red-500 text-sm">{errors.voucher}</p>
-                            )}
+                            {errors.voucher && <p className="text-sm text-red-500">{errors.voucher}</p>}
                         </div>
-
-
-
-
-
 
                         {/* Submit */}
                         <Button type="submit" disabled={processing} className="w-full">

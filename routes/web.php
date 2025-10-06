@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RecordController;
@@ -18,6 +20,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
+    //Dashboard
+    Route::post('/getdashboarddata', [DashboardController::class, 'getdashboarddata'])->name('getdashboarddata');
     //patient
 
     Route::get('/patients', [PatientController::class, 'index'])->name('patients.index');
@@ -53,9 +57,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::delete('/records/{record}', [RecordController::class, 'destroy'])->name('records.destroy');
 
+    //Income
 
 
-     //   Expenses
+
+    //   Expenses
     Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');
     Route::get('/expenses/create', [ExpenseController::class, 'create'])->name('expenses.create');
 
@@ -66,6 +72,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/expenses/{expense}', [ExpenseController::class, 'update'])->name('expense.update');
     Route::delete('/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expense.destroy');
+
+    Route::resource('income', IncomeController::class);
 });
 
 

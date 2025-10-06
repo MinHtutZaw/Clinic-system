@@ -9,6 +9,7 @@ import { BadgeAlert } from "lucide-react";
 import { route } from "ziggy-js";
 
 const breadcrumbs: BreadcrumbItem[] = [
+  { title: 'Expenses', href: '/expenses' },
   {
     title: "Add Expense",
     href: "/expenses/create",

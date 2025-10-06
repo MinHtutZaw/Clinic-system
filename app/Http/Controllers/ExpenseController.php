@@ -13,7 +13,7 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        $expenses = Expense::orderBy('id', 'desc')->paginate(2); // 5 per page
+        $expenses = Expense::orderBy('id', 'desc')->paginate(10); // 5 per page
         return Inertia::render('Expenses/index', compact('expenses'));
     }
 
