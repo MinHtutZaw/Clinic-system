@@ -143,7 +143,7 @@ export default function Index() {
                     onKeyDown={(e) => e.key === 'Enter' && handleFilter()}
                 />
 
-                <Select value={selectedTown} onValueChange={setSelectedTown}>
+                {/* <Select value={selectedTown} onValueChange={setSelectedTown}>
                     <SelectTrigger>
                         <SelectValue placeholder="Filter by Town" />
                     </SelectTrigger>
@@ -152,9 +152,9 @@ export default function Index() {
                             <SelectItem key={town} value={town}>{town}</SelectItem>
                         ))}
                     </SelectContent>
-                </Select>
+                </Select> */}
 
-                
+
                 <Select value={selectedAge} onValueChange={setSelectedAge}>
                     <SelectTrigger>
                         <SelectValue placeholder="Filter by Age" />
@@ -166,13 +166,15 @@ export default function Index() {
                     </SelectContent>
                 </Select>
 
-                <Button variant="outline" onClick={handleFilter}>
-                    Apply Filters
-                </Button>
+                <div className="flex gap-2 col-span-2 lg:col-span-1 justify-end">
+                    <Button variant="outline" onClick={handleFilter} className="flex-1">
+                        Apply
+                    </Button>
 
-                <Button variant="outline" onClick={handleClear}>
-                    Clear Filters
-                </Button>
+                    <Button variant="outline" onClick={handleClear} className="flex-1">
+                        Clear
+                    </Button>
+                </div>
             </div>
 
             {/* Patients Table */}

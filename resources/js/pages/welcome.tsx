@@ -1,3 +1,4 @@
+import AppLogo from '@/components/app-logo';
 import { dashboard, login, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
@@ -23,10 +24,10 @@ export default function Welcome() {
                         <div className="flex items-center space-x-2">
                             {/* Replace with actual logo */}
                             <div className="h-8 w-8 rounded bg-purple-600 flex items-center justify-center text-white font-bold">
-                                L
+                               <AppLogo />
                             </div>
                             <span className="text-lg font-semibold text-purple-700 dark:text-purple-400">
-                                Lavender Clinic
+                              Bloom
                             </span>
                         </div>
 

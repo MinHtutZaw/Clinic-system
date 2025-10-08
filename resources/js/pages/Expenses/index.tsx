@@ -127,7 +127,7 @@ export default function Index() {
 
 
             {/* Expenses Table */}
-            <div className="m-4">
+            <div className="m-4 rounded-lg shadow overflow-hidden">
                 {expenses.data.length > 0 ? (
                     <Table>
                         <TableHeader>

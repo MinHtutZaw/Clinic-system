@@ -16,7 +16,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/products',
     },
     {
-        title: 'Register Form for Products',
+        title: 'Register Form',
         href: '/products/create',
     },
 ];

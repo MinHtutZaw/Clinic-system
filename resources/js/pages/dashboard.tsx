@@ -8,6 +8,7 @@ import { Head } from '@inertiajs/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Area, AreaChart, CartesianGrid, Cell, Pie, PieChart, XAxis } from 'recharts';
+import { route } from 'ziggy-js';
 
 const chartConfig1 = {
     total_amount: { label: 'Total Amount', color: 'var(--chart-1)' },
@@ -33,23 +34,26 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Dashboard() {
     const [timeRange, setTimeRange] = React.useState('90d');
-    const [chartData, setChartData] = useState([]);
-    const [chartData1, setChartData1] = useState([]);
+    type ChartDataItem = { date: string; expense: number; income: number };
+
+    const [chartData, setChartData] = useState<ChartDataItem[]>([]);
+    type ChartData1Item = { product: string; total_amount: number; total_duration: number; fill: string };
+    const [chartData1, setChartData1] = useState<ChartData1Item[]>([]);
     const [profit, setProfit] = useState(0);
     const [product, setProduct] = useState<any>();
+
     const filteredData = chartData.filter((item) => {
         const date = new Date(item.date);
-        const referenceDate = new Date('2024-06-30');
+        const referenceDate = new Date(); // current date
         let daysToSubtract = 90;
-        if (timeRange === '30d') {
-            daysToSubtract = 30;
-        } else if (timeRange === '7d') {
-            daysToSubtract = 7;
-        }
+        if (timeRange === '30d') daysToSubtract = 30;
+        else if (timeRange === '7d') daysToSubtract = 7;
+
         const startDate = new Date(referenceDate);
-        startDate.setDate(startDate.getDate() - daysToSubtract);
+        startDate.setDate(referenceDate.getDate() - daysToSubtract);
         return date >= startDate;
     });
+
 
     useEffect(() => {
         axios
@@ -65,7 +69,7 @@ export default function Dashboard() {
                     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
                 }
 
-                const chartData1 = res.data.products.map((p) => ({
+                const chartData1 = res.data.products.map((p: { product: any; total_amount: any; total_duration: any; }) => ({
                     product: p.product,
                     total_amount: Number(p.total_amount),
                     total_duration: Number(p.total_duration),
@@ -82,12 +86,12 @@ export default function Dashboard() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <div className="mt-4 grid grid-cols-2 gap-4 px-2">
+            {/* Top cards */}
+            <div className="mt-4 grid grid-cols-1 gap-4 px-2 md:grid-cols-2">
                 <Card className="flex w-full flex-col">
                     <CardHeader>
                         <CardTitle>Profit Overview</CardTitle>
                     </CardHeader>
-
                     <CardContent className="flex flex-1 flex-col gap-2 overflow-y-auto">
                         <span className={profit < 0 ? 'font-semibold text-red-500' : 'font-semibold text-green-400'}>
                             {profit.toLocaleString()} MMK
@@ -99,15 +103,20 @@ export default function Dashboard() {
                     <CardHeader>
                         <CardTitle>Most Used Products</CardTitle>
                     </CardHeader>
-
-                    <CardContent className="flex flex-1 flex-col gap-2 overflow-y-auto">{product?.name}</CardContent>
+                    <CardContent className="flex flex-1 flex-col gap-2 overflow-y-auto">
+                        {product?.name}
+                    </CardContent>
                 </Card>
             </div>
             <Card className="mx-2 mt-4 pt-0">
                 <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
                     <div className="grid flex-1 gap-1">
                         <CardTitle>Profit Chart - Income/Expense</CardTitle>
-                        <CardDescription>Showing total Icome and Expense in last 3 months</CardDescription>
+                        <CardDescription>
+                            Showing total Income and Expense in the last{' '}
+                            {timeRange === '7d' ? '7 days' : timeRange === '30d' ? '30 days' : '3 months'}
+                        </CardDescription>
+
                     </div>
                     <Select value={timeRange} onValueChange={setTimeRange}>
                         <SelectTrigger className="hidden w-[160px] rounded-lg sm:ml-auto sm:flex" aria-label="Select a value">
@@ -128,7 +137,8 @@ export default function Dashboard() {
                 </CardHeader>
                 <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
                     <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
-                        <AreaChart data={chartData}>
+                        <AreaChart data={filteredData}>
+
                             <defs>
                                 <linearGradient id="fillExpense" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="var(--color-expense)" stopOpacity={0.8} />
@@ -175,14 +185,17 @@ export default function Dashboard() {
                     </ChartContainer>
                 </CardContent>
             </Card>
-            <div className="mx-2 my-4 grid grid-cols-2 gap-6">
+
+
+            {/* Bottom charts */}
+            <div className="mx-2 my-4 grid grid-cols-1 gap-6 md:grid-cols-2">
                 <Card className="flex flex-col">
                     <CardHeader className="items-center pb-0">
                         <CardTitle>Product Sales Overview</CardTitle>
                         <CardDescription>Total Amount by Product</CardDescription>
                     </CardHeader>
 
-                    <CardContent className="flex-1 pb-0">
+                    <CardContent className="flex-1 ">
                         <ChartContainer config={chartConfig1} className="mx-auto aspect-square max-h-[250px] px-0">
                             <PieChart>
                                 <ChartTooltip content={<ChartTooltipContent nameKey="product" hideLabel />} />
@@ -214,6 +227,7 @@ export default function Dashboard() {
                         </ChartContainer>
                     </CardContent>
                 </Card>
+
                 <Card className="flex w-full flex-col">
                     <CardHeader>
                         <CardTitle>Products Overview</CardTitle>
@@ -222,16 +236,24 @@ export default function Dashboard() {
 
                     <CardContent className="flex flex-1 flex-col gap-2 overflow-y-auto">
                         {chartData1.map((product, index) => (
-                            <div key={index} className="flex items-center justify-between rounded-md bg-muted/10 p-2">
+                            <div key={index} className="flex flex-col sm:flex-row sm:items-center justify-between rounded-md bg-muted/10 p-2 gap-2 sm:gap-4">
                                 <div className="flex items-center gap-2">
-                                    {/* Color swatch */}
-                                    <span className="h-4 w-4 rounded-sm" style={{ backgroundColor: product.fill }}></span>
-                                    <span className="font-medium">{product.product}</span>
+                                    <span className="h-4 w-4 rounded-sm flex-shrink-0" style={{ backgroundColor: product.fill }}></span>
+                                    <span className="font-medium text-sm sm:text-base break-words">{product.product}</span>
                                 </div>
-
-                                <div className="flex gap-4">
-                                    <span className="text-sm font-semibold">{product.total_amount.toLocaleString()} MMK</span>
-                                    <span className="text-sm text-muted-foreground">{product.total_duration} min</span>
+                                <div className="flex gap-4 items-center">
+                                    <span className="text-sm font-semibold whitespace-nowrap">{product.total_amount.toLocaleString()} MMK</span>
+                                    {(() => {
+                                        const hours = Math.floor(product.total_duration / 60);
+                                        const minutes = product.total_duration % 60;
+                                        return (
+                                            <span className="text-sm text-muted-foreground whitespace-nowrap">
+                                                {hours > 0
+                                                    ? `${hours} hr${hours > 1 ? 's' : ''}${minutes ? ` ${minutes} min` : ''}`
+                                                    : `${minutes} min`}
+                                            </span>
+                                        );
+                                    })()}
                                 </div>
                             </div>
                         ))}

@@ -89,7 +89,7 @@ export default function Index() {
                             Clear
                         </Button>
                     )}
-                </form>
+                </form> 
             </div>
 
             {/* ✅ Flash Notification */}
@@ -106,7 +106,7 @@ export default function Index() {
             )}
 
             {/* 📋 Records Table */}
-            <div className="m-4">
+            <div className="m-4 border border-gray-200 dark:border-gray-700">
                 {records.data.length > 0 ? (
                     <>
                         <Table>

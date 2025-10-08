@@ -20,7 +20,7 @@ export default function AuthSimpleLayout({ children, title, description }: Props
                                 {/* <AppLogoIcon className="size-9 fill-current text-[var(--foreground)] dark:text-white" /> */}
 
                                 <span className="text-2xl font-semibold text-purple-700 dark:text-purple-400">
-                                    Lavender Clinic
+                                    Bloom Clinic
                                 </span>
                             </div>
                             <span className="sr-only">{title}</span>

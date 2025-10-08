@@ -88,17 +88,18 @@ export default function Index() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Records" />
 
-            {/* 🔎 Header with Search */}
-            <div className="m-4 p-4 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-gray-200 dark:border-gray-700">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            
+            <div className="m-4 p-4 flex justify-between border-b border-gray-200 dark:border-gray-700">
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                     Records List
                 </h1>
                 <Link href={route("records.create")}>
-                    <Button className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md hover:opacity-90">
+                    <Button >
                         Add Record
                     </Button>
                 </Link>
             </div>
+           
 
             {/* Search Box */}
             <div className="m-4 flex justify-center">
@@ -170,11 +171,11 @@ export default function Index() {
                                 {/* Status Badge */}
                                 <TableCell>
                                     <span
-                                        className={`px-3 py-1 rounded-full text-xs font-medium ${record.status === "VVIP"
-                                                ? "bg-purple-100 text-purple-700"
+                                        className={`px-3 py-1 rounded-full text-xs font-semibold ${record.status === "VVIP"
+                                                ? "bg-purple-100 text-purple-800"
                                                 : record.status === "Paid"
-                                                    ? "bg-green-100 text-green-700"
-                                                    : "bg-gray-100 text-gray-700"
+                                                    ? "bg-green-100 text-green-800"
+                                                    : "bg-gray-100 text-gray-800"
                                             }`}
                                     >
                                         {record.status}
