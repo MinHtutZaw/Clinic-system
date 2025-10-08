@@ -5,7 +5,7 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder,BriefcaseIcon,Users, LayoutGrid } from 'lucide-react';
+import { BookOpen, Folder,BriefcaseIcon,Users, LayoutGrid, Library, Wallet, BanknoteIcon } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -28,17 +28,17 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Records',
         href: '/records',
-        icon: Folder,
+        icon:   Library ,
     },
      {
         title: 'Income',
         href: '/income',
-        icon: Folder,
+        icon: Wallet,
     },
      {
         title: 'Expenses',
         href: '/expenses',
-        icon: Folder,
+        icon: BanknoteIcon,
     }
 ];
 
