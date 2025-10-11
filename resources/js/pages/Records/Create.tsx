@@ -9,6 +9,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { BadgeAlert } from 'lucide-react';
+import { useState } from 'react';
 import { route } from 'ziggy-js';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -53,6 +54,13 @@ export default function Create() {
         e.preventDefault();
         post(route('records.store'), { forceFormData: true }); // Laravel route to RecordController@store
     };
+     // ✅ Add state for popover visibility
+    const [open, setOpen] = useState(false);
+
+    const handleSelectPatient = (id: number) => {
+        setData('patient_id', String(id));
+        setOpen(false); // ✅ close popover after selection
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -80,7 +88,7 @@ export default function Create() {
                         {/* Patient Combobox */}
                         <div>
                             <Label htmlFor="patient_id">Search Patient</Label>
-                            <Popover>
+                            <Popover open={open} onOpenChange={setOpen}>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" role="combobox" className="w-full justify-between">
                                         {data.patient_id
@@ -99,7 +107,7 @@ export default function Create() {
                                             {patients.map((p) => (
                                                 <CommandItem
                                                     key={p.id}
-                                                    onSelect={() => setData("patient_id", String(p.id))}
+                                                    onSelect={() => handleSelectPatient(p.id)}
                                                 >
                                                     {p.name} (ID: {p.id})
                                                 </CommandItem>
