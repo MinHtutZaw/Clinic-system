@@ -11,7 +11,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 
 import {
     Pagination,
@@ -19,7 +19,7 @@ import {
     PaginationEllipsis,
     PaginationItem,
     PaginationLink,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
 
 import {
     AlertDialog,
@@ -31,10 +31,10 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
-import { toast } from "sonner"
-import { useEffect } from "react"
+import { toast } from "sonner";
+import { useEffect } from "react";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -43,10 +43,19 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+interface Service {
+    id: number;
+    name: string;
+    service_price: string;
+}
+
 interface Product {
     id: number;
     name: string;
     description: string;
+    price: string;
+    duration: number;
+    services?: Service[];
 }
 
 interface PaginationLink {
@@ -73,43 +82,46 @@ export default function Index() {
     const { products, flash } = usePage().props as unknown as PageProps;
     const { processing, delete: destroy } = useForm();
 
-    // ✅ Show toast when flash message is set
+    // ✅ Toast when flash message exists
     useEffect(() => {
         if (flash?.message) {
             toast.success(flash.message, {
                 icon: <Megaphone className="w-5 h-5" />,
-                className: "  text-white rounded-lg shadow-lg",
-                style: { width: '30rem' } 
-
+                className: "text-white rounded-lg shadow-lg",
+                style: { width: '30rem' },
             });
         }
     }, [flash?.message]);
-    
 
     const handleDelete = (id: number) => {
         destroy(route('products.destroy', id));
-    }
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Products" />
 
             <div className='m-4 p-4 flex justify-between'>
-                <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Products List</h1>
+                <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+                    Products List
+                </h1>
                 <Link href={route('products.create')}>
-                    <Button>Add new Products</Button>
+                    <Button>Add new Product</Button>
                 </Link>
             </div>
 
             <div className="m-4">
                 <div className="m-4">
-                    {products.data.length > 0 && (
+                    {products.data.length > 0 ? (
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="w-[100px]">ID</TableHead>
+                                    <TableHead className="w-[80px]">ID</TableHead>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Description</TableHead>
+                                    <TableHead>Price </TableHead>
+                                    <TableHead>Duration (min)</TableHead>
+                                    <TableHead>Services</TableHead>
                                     <TableHead>Action</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -124,15 +136,39 @@ export default function Index() {
                                                 ? product.description.substring(0, 50) + "..."
                                                 : product.description}
                                         </TableCell>
+                                        <TableCell>
+                                            {parseFloat(product.price).toString()} MMK
+                                        </TableCell>
+
+                                        <TableCell>{product.duration} </TableCell>
+
+                                        <TableCell>
+                                            {product.services && product.services.length > 0 ? (
+                                                <div
+                                                    className="flex flex-wrap gap-1"
+                                                    title={product.services.map(s => s.name).join(', ')}
+                                                >
+                                                    {product.services.map((service) => (
+                                                        <span
+                                                            key={service.id}
+                                                            className="inline-flex items-center px-2 py-1 bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 dark:from-blue-900 dark:to-blue-800 dark:text-blue-100 rounded-full text-xs font-medium  capitalize border border-blue-200 dark:border-blue-700 shadow-sm"
+                                                        >
+                                                            {service.name}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <span className="text-gray-400 italic text-sm">No services</span>
+                                            )}
+                                        </TableCell>
 
                                         <TableCell className="space-x-2">
                                             <Link href={route('products.edit', product.id)}>
-                                                <button className='text-blue-400 hover:text-blue-800'>
+                                                <button className="text-blue-400 hover:text-blue-800">
                                                     <SquarePen />
                                                 </button>
                                             </Link>
 
-                                            {/* Delete with AlertDialog */}
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
                                                     <button
@@ -144,12 +180,13 @@ export default function Index() {
                                                 </AlertDialogTrigger>
                                                 <AlertDialogContent>
                                                     <AlertDialogHeader>
-                                                        <AlertDialogTitle>
-                                                            Delete product
-                                                        </AlertDialogTitle>
+                                                        <AlertDialogTitle>Delete Product</AlertDialogTitle>
                                                         <AlertDialogDescription>
                                                             Are you sure you want to delete{" "}
-                                                            <span className="font-semibold">{product.name}</span>? This action cannot be undone.
+                                                            <span className="font-semibold">
+                                                                {product.name}
+                                                            </span>
+                                                            ? This action cannot be undone.
                                                         </AlertDialogDescription>
                                                     </AlertDialogHeader>
                                                     <AlertDialogFooter>
@@ -169,9 +206,14 @@ export default function Index() {
                                 ))}
                             </TableBody>
                         </Table>
+                    ) : (
+                        <p className="text-center text-gray-500 dark:text-gray-300">
+                            No products found.
+                        </p>
                     )}
                 </div>
 
+                {/* ✅ Pagination */}
                 <Pagination className='justify-center m-3'>
                     <PaginationContent>
                         {products.links.map((link, i) => (

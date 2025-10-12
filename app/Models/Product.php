@@ -12,14 +12,18 @@ class Product extends Model
     protected $fillable = [
         'name',
         'price',
+        'duration',
         'description',
         // add other columns here
     ];
-
+    public function services()
+    {
+        return $this->belongsToMany(Service::class, 'product_service')
+            ->withTimestamps();
+    }
 
     public function records()
-{
-    return $this->hasMany(Record::class);
-}
-
+    {
+        return $this->hasMany(Record::class);
+    }
 }

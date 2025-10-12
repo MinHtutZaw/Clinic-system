@@ -6,6 +6,7 @@ use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RecordController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -74,6 +75,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expense.destroy');
 
     Route::resource('income', IncomeController::class);
+
+    Route::resource('services', ServiceController::class);
+
 });
 
 

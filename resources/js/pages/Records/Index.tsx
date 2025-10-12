@@ -88,7 +88,7 @@ export default function Index() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Records" />
 
-            
+
             <div className="m-4 p-4 flex justify-between border-b border-gray-200 dark:border-gray-700">
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                     Records List
@@ -99,7 +99,7 @@ export default function Index() {
                     </Button>
                 </Link>
             </div>
-           
+
 
             {/* Search Box */}
             <div className="m-4 flex justify-center">
@@ -142,75 +142,83 @@ export default function Index() {
             )}
 
             {/* Table */}
-            <div className="m-4 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700">
-                <Table>
-                    <TableHeader className="bg-gray-100 dark:bg-gray-800">
-                        <TableRow>
-                            <TableHead className="font-semibold">ID</TableHead>
-                            <TableHead>Patient</TableHead>
-                            <TableHead>Product</TableHead>
-                            <TableHead>Duration</TableHead>
-                            <TableHead>Price</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Voucher</TableHead>
-                            <TableHead>Time</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {records.data.map((record) => (
-                            <TableRow
-                                key={record.id}
-                                className="hover:bg-gray-50 dark:hover:bg-gray-800 transition"
-                            >
-                                <TableCell>{record.id}</TableCell>
-                                <TableCell>{record.patient?.name ?? "Unknown"}</TableCell>
-                                <TableCell>{record.product?.name ?? "Unknown"}</TableCell>
-                                <TableCell>{record.duration} min</TableCell>
-                                <TableCell>{record.price} MMK</TableCell>
+            
+            {records.data.length > 0 ? (
+                <div className="m-4 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700">
+                    <Table>
+                        <TableHeader className="bg-gray-100 dark:bg-gray-800">
+                            <TableRow>
+                                <TableHead className="font-semibold">ID</TableHead>
+                                <TableHead>Patient</TableHead>
+                                <TableHead>Product</TableHead>
+                                <TableHead>Duration</TableHead>
+                                <TableHead>Price</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Voucher</TableHead>
+                                <TableHead>Time</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {records.data.map((record) => (
+                                <TableRow
+                                    key={record.id}
+                                    className="hover:bg-gray-50 dark:hover:bg-gray-800 transition"
+                                >
+                                    <TableCell>{record.id}</TableCell>
+                                    <TableCell>{record.patient?.name ?? "Unknown"}</TableCell>
+                                    <TableCell>{record.product?.name ?? "Unknown"}</TableCell>
+                                    <TableCell>{record.duration} min</TableCell>
+                                    <TableCell>{record.price} MMK</TableCell>
 
-                                {/* Status Badge */}
-                                <TableCell>
-                                    <span
-                                        className={`px-3 py-1 rounded-full text-xs font-semibold ${record.status === "VVIP"
+                                    {/* Status Badge */}
+                                    <TableCell>
+                                        <span
+                                            className={`px-3 py-1 rounded-full text-xs font-semibold ${record.status === "VVIP"
                                                 ? "bg-purple-100 text-purple-800"
                                                 : record.status === "Paid"
                                                     ? "bg-green-100 text-green-800"
                                                     : "bg-gray-100 text-gray-800"
-                                            }`}
-                                    >
-                                        {record.status}
-                                    </span>
-                                </TableCell>
-
-                                <TableCell>
-                                    {record.voucher_url ? (
-                                        <a
-                                            href={record.voucher_url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-600 hover:underline"
+                                                }`}
                                         >
-                                            View Voucher
-                                        </a>
-                                    ) : (
-                                        <span className="text-gray-400">No voucher</span>
-                                    )}
-                                </TableCell>
+                                            {record.status}
+                                        </span>
+                                    </TableCell>
 
-                                <TableCell>
-                                    {new Intl.DateTimeFormat("en-US", {
-                                        year: "numeric",
-                                        month: "short",
-                                        day: "2-digit",
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                    }).format(new Date(record.created_at))}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </div>
+                                    <TableCell>
+                                        {record.voucher_url ? (
+                                            <a
+                                                href={record.voucher_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-600 hover:underline"
+                                            >
+                                                View Voucher
+                                            </a>
+                                        ) : (
+                                            <span className="text-gray-400">No voucher</span>
+                                        )}
+                                    </TableCell>
+
+                                    <TableCell>
+                                        {new Intl.DateTimeFormat("en-US", {
+                                            year: "numeric",
+                                            month: "short",
+                                            day: "2-digit",
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        }).format(new Date(record.created_at))}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+            ) : (
+                <div className="m-4 text-center py-8 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
+                    <p className="text-gray-500 dark:text-gray-400 text-lg">No records available</p>
+                    <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">Create your first record to get started</p>
+                </div>
+            )}
 
             {/* Pagination */}
             <Pagination className="my-6">
