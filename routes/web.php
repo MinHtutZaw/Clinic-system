@@ -7,6 +7,7 @@ use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\VisitController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -35,6 +36,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/patients/{patient}', [PatientController::class, 'update'])->name('patients.update');
     Route::delete('/patients/{patient}', [PatientController::class, 'destroy'])->name('patients.destroy');
+
+    //Visit
+    Route::get('patients/{patient}/visits', [VisitController::class, 'index'])
+        ->name('patients.visits.index');
+
+    Route::get('patients/{patient}/visits/create', [VisitController::class, 'create'])
+        ->name('patients.visits.create');
+
+    Route::post('patients/{patient}/visits', [VisitController::class, 'store'])
+        ->name('patients.visits.store');
 
 
     //   Product
@@ -77,7 +88,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('income', IncomeController::class);
 
     Route::resource('services', ServiceController::class);
-
 });
 
 

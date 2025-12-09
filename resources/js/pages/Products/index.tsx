@@ -43,11 +43,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-interface Service {
-    id: number;
-    name: string;
-    service_price: string;
-}
 
 interface Product {
     id: number;
@@ -55,7 +50,7 @@ interface Product {
     description: string;
     price: string;
     duration: number;
-    services?: Service[];
+   
 }
 
 interface PaginationLink {
@@ -121,7 +116,7 @@ export default function Index() {
                                     <TableHead>Description</TableHead>
                                     <TableHead>Price </TableHead>
                                     <TableHead>Duration (min)</TableHead>
-                                    <TableHead>Services</TableHead>
+                                    
                                     <TableHead>Action</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -142,25 +137,7 @@ export default function Index() {
 
                                         <TableCell>{product.duration} </TableCell>
 
-                                        <TableCell>
-                                            {product.services && product.services.length > 0 ? (
-                                                <div
-                                                    className="flex flex-wrap gap-1"
-                                                    title={product.services.map(s => s.name).join(', ')}
-                                                >
-                                                    {product.services.map((service) => (
-                                                        <span
-                                                            key={service.id}
-                                                            className="inline-flex items-center px-2 py-1 bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 dark:from-blue-900 dark:to-blue-800 dark:text-blue-100 rounded-full text-xs font-medium  capitalize border border-blue-200 dark:border-blue-700 shadow-sm"
-                                                        >
-                                                            {service.name}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            ) : (
-                                                <span className="text-gray-400 italic text-sm">No services</span>
-                                            )}
-                                        </TableCell>
+                                      
 
                                         <TableCell className="space-x-2">
                                             <Link href={route('products.edit', product.id)}>

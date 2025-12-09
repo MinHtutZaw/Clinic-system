@@ -7,7 +7,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Area, AreaChart, CartesianGrid, Cell, Pie, PieChart, XAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, Cell, Pie, PieChart, XAxis, Legend } from 'recharts';
 import { route } from 'ziggy-js';
 
 const chartConfig1 = {
@@ -37,6 +37,7 @@ export default function Dashboard() {
     type ChartDataItem = { date: string; expense: number; income: number };
 
     const [chartData, setChartData] = useState<ChartDataItem[]>([]);
+
     type ChartData1Item = { product: string; total_amount: number; total_duration: number; fill: string };
     const [chartData1, setChartData1] = useState<ChartData1Item[]>([]);
     const [profit, setProfit] = useState(0);
@@ -53,6 +54,7 @@ export default function Dashboard() {
         startDate.setDate(referenceDate.getDate() - daysToSubtract);
         return date >= startDate;
     });
+
 
 
     useEffect(() => {
@@ -197,33 +199,36 @@ export default function Dashboard() {
 
                     <CardContent className="flex-1 ">
                         <ChartContainer config={chartConfig1} className="mx-auto aspect-square max-h-[250px] px-0">
-                            <PieChart>
+
+                            <PieChart
+                               
+                            >
                                 <ChartTooltip content={<ChartTooltipContent nameKey="product" hideLabel />} />
+
+                                {/* ✅ Legend  */}
+                             
+                                <Legend
+                                    layout="horizontal"
+                                    align="center"       // horizontal alignment
+                                    verticalAlign="bottom" // position at the bottom
+                                    iconSize={10}
+                                    wrapperStyle={{ paddingTop: 30 }}
+                                />
+
                                 <Pie
                                     data={chartData1}
                                     dataKey="total_amount"
                                     nameKey="product"
-                                    labelLine={false}
-                                    label={({ payload, ...props }) => (
-                                        <text
-                                            cx={props.cx}
-                                            cy={props.cy}
-                                            x={props.x}
-                                            y={props.y}
-                                            textAnchor={props.textAnchor}
-                                            dominantBaseline={props.dominantBaseline}
-                                            fill="hsla(var(--foreground))"
-                                            fontSize={12}
-                                        >
-                                            {payload.product}
-                                        </text>
-                                    )}
+                                    outerRadius="100%" // You can adjust this back to desired size
+                                    labelLine={false} // ✅ Remove label lines
+                                    label={false}     // ✅ Completely disable slice labels
                                 >
                                     {chartData1.map((entry, index) => (
                                         <Cell key={index} fill={entry.fill} />
                                     ))}
                                 </Pie>
                             </PieChart>
+
                         </ChartContainer>
                     </CardContent>
                 </Card>

@@ -18,36 +18,26 @@ const breadcrumbs: BreadcrumbItem[] = [
   { title: 'Create Product', href: '/products/create' },
 ];
 
-interface Service {
-  id: number;
-  name: string;
-  service_price: string | number;
-}
+
 
 interface PageProps {
-  services: Service[];
+  
   errors: Record<string, string>;
 }
 
 export default function Create() {
-  const { services } = usePage().props as unknown as PageProps;
+ 
   const { data, setData, post, processing, errors } = useForm({
     name: '',
     price: '',
     duration: '',
     description: '',
-    service_ids: [] as number[],
+   
   });
 
   const [open, setOpen] = useState(false);
 
-  const handleCheckboxChange = (id: number) => {
-    if (data.service_ids.includes(id)) {
-      setData('service_ids', data.service_ids.filter((sid) => sid !== id));
-    } else {
-      setData('service_ids', [...data.service_ids, id]);
-    }
-  };
+ 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,7 +45,7 @@ export default function Create() {
   };
 
   const hasErrors = Object.keys(errors).length > 0;
-  const selectedServices = services.filter((s) => data.service_ids.includes(s.id));
+  
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -99,7 +89,7 @@ export default function Create() {
 
             {/* Price */}
             <div className="space-y-2">
-              <Label htmlFor="price">Base Price</Label>
+              <Label htmlFor="price">Price</Label>
               <Input
                 id="price"
                 type="number"
@@ -134,66 +124,7 @@ export default function Create() {
               />
             </div>
 
-            {/* Services Popover */}
-            <div className="space-y-2">
-              <Label>Services</Label>
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full justify-between flex-wrap h-auto min-h-[42px]"
-                  >
-                    {selectedServices.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {selectedServices.map((s) => (
-                          <Badge
-                            key={s.id}
-                            variant="secondary"
-                            className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100"
-                          >
-                            {s.name}
-                          </Badge>
-                        ))}
-                      </div>
-                    ) : (
-                      <span className="text-muted-foreground">Select services...</span>
-                    )}
-                    <ChevronDown className="ml-2 h-4 w-4 opacity-60" />
-                  </Button>
-                </PopoverTrigger>
-
-                <PopoverContent className="w-[300px] p-2 bg-white dark:bg-gray-900 shadow-lg rounded-lg border">
-                  <div className="max-h-[200px] overflow-y-auto">
-                    {services.map((service) => {
-                      const selected = data.service_ids.includes(service.id);
-                      return (
-                        <div
-                          key={service.id}
-                          onClick={() => handleCheckboxChange(service.id)}
-                          className={cn(
-                            'flex items-center justify-between px-3 py-2 rounded-md cursor-pointer transition-colors',
-                            selected
-                              ? 'bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-200'
-                              : 'hover:bg-gray-100 dark:hover:bg-gray-800'
-                          )}
-                        >
-                          <span className="font-medium">{service.name}</span>
-                          {selected && <Check className="h-4 w-4 text-blue-600" />}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </PopoverContent>
-              </Popover>
-
-              {errors.service_ids && (
-                <div className="flex items-center gap-2 text-red-600 text-sm mt-1">
-                  <AlertCircle className="h-4 w-4" />
-                  <span>{errors.service_ids}</span>
-                </div>
-              )}
-            </div>
+            
 
             {/* Submit */}
             <Button

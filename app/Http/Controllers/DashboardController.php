@@ -12,9 +12,6 @@ use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return Inertia::render('dashboard');
@@ -22,14 +19,21 @@ class DashboardController extends Controller
 
     public function getdashboarddata(Request $request)
     {
+        // --- Daily Expenses ---
         $expenses = Expense::selectRaw('DATE(created_at) as date, SUM(amount) as total_amount')
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->pluck('total_amount', 'date');
-        $income = Record::selectRaw('DATE(created_at) as date, SUM(price) as total_amount')
+
+        // --- Daily Income (from record_products pivot with join to records) ---
+        $income = DB::table('record_products')
+            ->join('records', 'record_products.record_id', '=', 'records.id')
+            ->selectRaw('DATE(records.created_at) as date, SUM(record_products.price) as total_amount')
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->pluck('total_amount', 'date');
+
+        // --- Merge all dates ---
         $dates = collect($expenses->keys())
             ->merge($income->keys())
             ->unique()
@@ -42,84 +46,53 @@ class DashboardController extends Controller
                 'income' => $income[$date] ?? 0,
             ];
         })->values();
-        $productData = Record::select(
-            'product_id',
-            DB::raw('SUM(price) as total_amount'),
-            DB::raw('SUM(duration) as total_duration')
-        )
-            ->with('product:id,name')
-            ->groupBy('product_id')
-            ->get()
-            ->map(function ($record, $index) {
-                $colorVar = 'var(--color-' . Str::slug($record->product->name ?? 'unknown') . ')';
-                return [
-                    'product' => $record->product->name ?? 'Unknown',
-                    'total_amount' => $record->total_amount,
-                    'total_duration' => $record->total_duration,
-                    'fill' => $colorVar,
-                ];
-            });
-        $incomePrice = Record::sum('price');
+
+        // --- Product Data ---
+        // Product analysis from pivot
+        $productStats = DB::table('record_products')
+            ->join('products', 'record_products.product_id', '=', 'products.id')
+            ->select(
+                'products.id',
+                'products.name as product',
+                DB::raw('SUM(record_products.price) as total_amount'),
+                DB::raw('COUNT(record_products.id) * products.duration as total_duration'),
+                DB::raw('COUNT(record_products.id) as usage_count')
+            )
+            ->groupBy('products.id', 'products.name', 'products.duration')
+            ->orderByDesc('usage_count')
+            ->get();
+
+        // Most used product (if exists)
+        $mostUsedProduct = $productStats->first();
+
+        // Convert for chart format
+        $productsForChart = $productStats->map(function ($item) {
+            return [
+                'product' => $item->product,
+                'total_amount' => (float) $item->total_amount,
+                'total_duration' => (int) $item->total_duration,
+            ];
+        });
+
+        // --- Total Profit ---
+        $incomePrice = DB::table('record_products')->sum('price');
         $expensePrice = Expense::sum('amount');
         $profit = $incomePrice - $expensePrice;
-        $mostUsedProductId = Record::select('product_id', DB::raw('COUNT(*) as total'))
+
+        // --- Most Used Product ---
+        $mostUsedProductId = DB::table('record_products')
+            ->select('product_id', DB::raw('COUNT(*) as total'))
             ->groupBy('product_id')
             ->orderByDesc('total')
             ->value('product_id');
 
         $mostUsedProduct = Product::find($mostUsedProductId);
+
         return response()->json([
             'daily' => $dailyData,
-            'products' => $productData,
-            'profit' => $profit,
+            'products' => $productsForChart,
             'mostUsedProduct' => $mostUsedProduct,
+            'profit' => $profit,
         ]);
-    }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

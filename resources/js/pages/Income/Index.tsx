@@ -89,7 +89,7 @@ export default function Index() {
                             Clear
                         </Button>
                     )}
-                </form> 
+                </form>
             </div>
 
             {/* ✅ Flash Notification */}
@@ -127,19 +127,23 @@ export default function Index() {
                                     <TableRow key={record.id}>
                                         <TableCell>{record.id}</TableCell>
                                         <TableCell>{record.patient?.name ?? 'Unknown'}</TableCell>
-                                        <TableCell>{record.product?.name ?? 'Unknown'}</TableCell>
+                                        <TableCell>
+                                            {record.products.length > 0
+                                                ? record.products.map(p => p.name).join(', ')
+                                                : 'None'}
+                                        </TableCell>
+
                                         <TableCell>{record.duration} min</TableCell>
                                         <TableCell>{record.price} MMK</TableCell>
 
                                         <TableCell>
                                             <span
-                                                className={`rounded px-2 py-1 text-xs font-semibold ${
-                                                    record.status === 'VVIP'
+                                                className={`rounded px-2 py-1 text-xs font-semibold ${record.status === 'VVIP'
                                                         ? 'bg-purple-200 text-purple-800'
                                                         : record.status === 'Paid'
-                                                          ? 'bg-green-200 text-green-800'
-                                                          : 'bg-gray-200 text-gray-800'
-                                                }`}
+                                                            ? 'bg-green-200 text-green-800'
+                                                            : 'bg-gray-200 text-gray-800'
+                                                    }`}
                                             >
                                                 {record.status}
                                             </span>

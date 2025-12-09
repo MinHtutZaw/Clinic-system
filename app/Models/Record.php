@@ -19,14 +19,14 @@ class Record extends Model
 
     ];
 
-    protected $appends = ['voucher_url'];
+    // protected $appends = ['voucher_url'];
 
-    public function getVoucherUrlAttribute()
-    {
-        return $this->voucher_path
-            ? asset('storage/' . $this->voucher_path)
-            : null;
-    }
+    // public function getVoucherUrlAttribute()
+    // {
+    //     return $this->voucher_path
+    //         ? asset('storage/' . $this->voucher_path)
+    //         : null;
+    // }
 
     public function scopeSearch($query, $search)
     {
@@ -39,15 +39,27 @@ class Record extends Model
 
 
 
-
-
     public function patient()
     {
         return $this->belongsTo(Patient::class);
     }
 
-    public function product()
+    // public function product()
+    // {
+    //     return $this->belongsTo(Product::class);
+    // }
+    
+    public function products()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsToMany(Product::class, 'record_products')
+                    ->withPivot('price')
+                    ->withTimestamps();
+    }
+
+    public function services()
+    {
+        return $this->belongsToMany(Service::class, 'record_services')
+                    ->withPivot('price')
+                    ->withTimestamps();
     }
 }

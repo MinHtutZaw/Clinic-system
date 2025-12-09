@@ -175,6 +175,7 @@ export default function Edit({ product, services }: Props) {
                     )}
                     <ChevronDown className="ml-2 h-4 w-4 opacity-60" />
                   </Button>
+        
                 </PopoverTrigger>
 
                 <PopoverContent className="w-[300px] p-2 bg-white dark:bg-gray-900 shadow-lg rounded-lg border">

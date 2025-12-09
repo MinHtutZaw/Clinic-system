@@ -14,7 +14,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('services')->orderBy('id', 'desc')->paginate(10);
+        $products = Product::orderBy('id', 'desc')->paginate(10);
         return Inertia::render('Products/index', compact('products'));
     }
 
@@ -24,9 +24,7 @@ class ProductController extends Controller
     public function create()
     {
         $services = Service::all();
-        return Inertia::render('Products/create', [
-            'services' => $services,
-        ]);
+        return Inertia::render('Products/create');
     }
 
     /**
@@ -40,19 +38,12 @@ class ProductController extends Controller
                 'price'       => 'required|numeric',
                 'duration'    => 'required|integer',
                 'description'   => 'required|string',
-                'service_ids' => 'array', // optional: array of service IDs
+               
             ]
         );
-        $product = Product::create([
-            'name' => $validated['name'],
-            'price' => $validated['price'],
-            'duration' => $validated['duration'],
-            'description' => $validated['description'],
-        ]);
-        // Attach selected services (if any)
-        if (!empty($validated['service_ids'])) {
-            $product->services()->attach($validated['service_ids']);
-        }
+        Product::create($validated);
+
+       
 
         return redirect()->route('products.index')
             ->with('message', 'Product created successfully.');
@@ -71,11 +62,10 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $services = Service::all();
-        $product->load('services');
+       
         return Inertia::render('Products/edit', [
             'product' => $product,
-            'services' => $services,
+           
         ]);
     }
 
@@ -90,21 +80,11 @@ class ProductController extends Controller
                 'price'       => 'required|numeric',
                 'duration'    => 'required|integer',
                 'description' => 'required|string',
-                'service_ids' => 'array',
-
             ]
         );
-        $product->update(
-            [
-                'name' => $request->input('name'),
-                'price' => $validated['price'],
-                'duration' => $validated['duration'],
-                'description' => $request->input('description'),
+        $product->update($validated);
 
-            ]
-        );
-
-        $product->services()->sync($validated['service_ids'] ?? []);
+        
 
         return redirect()->route('products.index')
                          ->with('message', 'Product updated successfully.');

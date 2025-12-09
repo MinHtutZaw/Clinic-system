@@ -14,16 +14,12 @@ return new class extends Migration
         Schema::create('records', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
             
             $table->integer('duration'); // minutes
             $table->decimal('price', 10, 2);
-
-            $table->string('voucher_path')->nullable();
-            $table->enum('status', ['Trial', 'Paid', 'VVIP'])->default('Trial');
-            
+           $table->enum('status', ['Trial', 'Paid', 'VVIP'])->default('Trial');  
+            // $table->string('voucher_path')->nullable();
             // $table->decimal('discount', 5, 2)->default(0); // staff discount %
-
             $table->timestamps();
         });
     }

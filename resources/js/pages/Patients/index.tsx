@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm, usePage, router } from '@inertiajs/react';
-import { Megaphone, SquarePen, Trash2 } from 'lucide-react';
+import { BookOpen, Megaphone, PlusCircle, SquarePen, Trash2 } from 'lucide-react';
 import { route } from 'ziggy-js';
 import {
     Table,
@@ -75,8 +75,6 @@ const ageRanges = [
     { label: "> 60", value: ">60" },
 ];
 export default function Index() {
-
-
 
     const { patients, flash, allTowns } = usePage().props as unknown as PageProps & {
         allTowns: string[];
@@ -210,40 +208,59 @@ export default function Index() {
                                     <TableCell>{patient.role}</TableCell>
 
                                     <TableCell>
-                                        <Link href={route('patients.edit', patient.id)}>
-                                            <button className='text-blue-400 hover:text-blue-800'>
-                                                <SquarePen />
-                                            </button>
-                                        </Link>
-
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <button
-                                                    className="text-red-400 hover:text-red-800 ml-2"
-                                                    disabled={processing}
-                                                >
-                                                    <Trash2 />
+                                         {/* Edit */}
+                                        <div className="flex items-center gap-2">
+                                            <Link href={route('patients.edit', patient.id)}>
+                                                <button className='text-blue-400 hover:text-blue-800'>
+                                                    <SquarePen />
                                                 </button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader>
-                                                    <AlertDialogTitle>Delete Patient</AlertDialogTitle>
-                                                    <AlertDialogDescription>
-                                                        Are you sure you want to delete <b>{patient.name}</b>? This action cannot be undone.
-                                                    </AlertDialogDescription>
-                                                </AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction
-                                                        onClick={() => handleDelete(patient.id)}
-                                                        className="bg-red-700 text-white hover:bg-red-600"
+                                            </Link>
+
+                                            {/* New Visit */}
+                                            <Link href={route('patients.visits.create', patient.id)}>
+                                                <button className="text-green-500 hover:text-green-700">
+                                                    <PlusCircle />
+                                                </button>
+                                            </Link>
+
+                                            {/* History */}
+                                            <Link href={route('patients.visits.index', patient.id)}>
+                                                <button className="text-purple-500 hover:text-purple-700">
+                                                    <BookOpen />
+                                                </button>
+                                            </Link>
+
+                                            {/* Delete */}
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <button
+                                                        className="text-red-400 hover:text-red-800 "
                                                         disabled={processing}
                                                     >
-                                                        Confirm
-                                                    </AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
+                                                        <Trash2 />
+                                                    </button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Delete Patient</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            Are you sure you want to delete <b>{patient.name}</b>? This action cannot be undone.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction
+                                                            onClick={() => handleDelete(patient.id)}
+                                                            className="bg-red-700 text-white hover:bg-red-600"
+                                                            disabled={processing}
+                                                        >
+                                                            Confirm
+                                                        </AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
+
                                     </TableCell>
                                 </TableRow>
                             ))}

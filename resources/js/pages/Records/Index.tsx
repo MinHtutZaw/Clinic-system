@@ -25,10 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const breadcrumbs = [
-    {
-        title: "Records",
-        href: "/records",
-    },
+    { title: "Records", href: "/records" },
 ];
 
 // Interfaces
@@ -42,15 +39,19 @@ interface Product {
     name: string;
 }
 
+interface Service {
+    id: number;
+    name: string;
+}
+
 interface Record {
     id: number;
     patient: Patient;
-    product: Product;
+    products: Product[];
+    services: Service[];
     duration: number;
     price: string;
     status: "Trial" | "Paid" | "VVIP";
-    voucher_path?: string | null;
-    voucher_url?: string | null;
     created_at: string;
 }
 
@@ -73,7 +74,7 @@ export default function Index() {
     const { records, flash, filters } = usePage().props as unknown as PageProps;
     const { delete: destroy } = useForm();
 
-    // 🔍 Handle Search
+    // Handle search
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
@@ -88,18 +89,14 @@ export default function Index() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Records" />
 
-
             <div className="m-4 p-4 flex justify-between border-b border-gray-200 dark:border-gray-700">
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                     Records List
                 </h1>
                 <Link href={route("records.create")}>
-                    <Button >
-                        Add Record
-                    </Button>
+                    <Button>Add Record</Button>
                 </Link>
             </div>
-
 
             {/* Search Box */}
             <div className="m-4 flex justify-center">
@@ -142,20 +139,19 @@ export default function Index() {
             )}
 
             {/* Table */}
-            
             {records.data.length > 0 ? (
                 <div className="m-4 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700">
                     <Table>
                         <TableHeader className="bg-gray-100 dark:bg-gray-800">
                             <TableRow>
-                                <TableHead className="font-semibold">ID</TableHead>
+                                <TableHead>ID</TableHead>
                                 <TableHead>Patient</TableHead>
-                                <TableHead>Product</TableHead>
+                                <TableHead>Products</TableHead>
                                 <TableHead>Duration</TableHead>
                                 <TableHead>Price</TableHead>
                                 <TableHead>Status</TableHead>
-                                <TableHead>Voucher</TableHead>
-                                <TableHead>Time</TableHead>
+                                <TableHead>Services</TableHead>
+                                <TableHead>Created At</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -166,9 +162,17 @@ export default function Index() {
                                 >
                                     <TableCell>{record.id}</TableCell>
                                     <TableCell>{record.patient?.name ?? "Unknown"}</TableCell>
-                                    <TableCell>{record.product?.name ?? "Unknown"}</TableCell>
+
+                                    {/* Products */}
+                                    <TableCell>
+                                        {record.products.length > 0
+                                            ? record.products.map(p => p.name).join(", ")
+                                            : "None"}
+                                    </TableCell>
+
                                     <TableCell>{record.duration} min</TableCell>
-                                    <TableCell>{record.price} MMK</TableCell>
+                                    <TableCell>{parseInt(record.price)} MMK</TableCell>
+
 
                                     {/* Status Badge */}
                                     <TableCell>
@@ -184,19 +188,11 @@ export default function Index() {
                                         </span>
                                     </TableCell>
 
+                                    {/* Services */}
                                     <TableCell>
-                                        {record.voucher_url ? (
-                                            <a
-                                                href={record.voucher_url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-600 hover:underline"
-                                            >
-                                                View Voucher
-                                            </a>
-                                        ) : (
-                                            <span className="text-gray-400">No voucher</span>
-                                        )}
+                                        {record.services.length > 0
+                                            ? record.services.map(s => s.name).join(", ")
+                                            : "None"}
                                     </TableCell>
 
                                     <TableCell>
@@ -239,7 +235,6 @@ export default function Index() {
                     ))}
                 </PaginationContent>
             </Pagination>
-
         </AppLayout>
     );
 }

@@ -12,12 +12,13 @@ class IncomeController extends Controller
      */
     public function index(Request $request)
     {
-        $records = Record::with(['patient', 'product'])
+        $records = Record::with(['patient', 'products'])
             ->where('price', '>', 0)
             ->search($request->input('search'))
             ->orderBy('created_at', 'desc')
             ->paginate(10)
             ->withQueryString();
+
         return inertia('Income/Index', [
             'records' => $records,
             'filters' => $request->only('search'),
