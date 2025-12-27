@@ -68,13 +68,14 @@ We collaborated on planning, development, and feature implementation.
    ```bash
    git clone https://github.com/MinHtutZaw/Clinic-system.git
 2. Navigate to the project directory
-
+    ```bash
    cd Clinic-system
    
 4. Install dependencies
-
+    ```bash
    npm install
    
 6. Start the development server
+   ```bash
    npm run dev
 
