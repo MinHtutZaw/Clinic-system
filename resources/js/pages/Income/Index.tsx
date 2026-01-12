@@ -10,6 +10,7 @@ import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, Pagi
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import SearchBar from '@/components/common/searchbar';
 
 const breadcrumbs = [
     {
@@ -70,27 +71,16 @@ export default function Index() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Records" />
 
-            {/* 🔎 Header with Search */}
-            <div className="m-4 flex flex-col items-center justify-between gap-4 p-4 md:flex-row">
-                <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Income List</h1>
-            </div>
-            <div className="m-4 flex justify-center">
-                <form onSubmit={handleSearch} className="flex w-full max-w-3xl space-x-3">
-                    <Input
-                        type="text"
-                        name="search"
-                        placeholder="Search by patient name..."
-                        defaultValue={filters.search ?? ''}
-                        className="flex-grow"
-                    />
-                    <Button type="submit">Search</Button>
-                    {filters.search && (
-                        <Button type="button" variant="outline" onClick={() => router.get(route('income.index'))}>
-                            Clear
-                        </Button>
-                    )}
-                </form>
-            </div>
+            {/* 🔎 Search */}
+          
+            <SearchBar
+                title="Income List"
+                placeholder="Search by patient name..."
+                searchValue={filters.search}
+                clearRoute={route('income.index')}
+                onSearch={handleSearch}
+            />
+
 
             {/* ✅ Flash Notification */}
             {flash.message && (
@@ -139,10 +129,10 @@ export default function Index() {
                                         <TableCell>
                                             <span
                                                 className={`rounded px-2 py-1 text-xs font-semibold ${record.status === 'VVIP'
-                                                        ? 'bg-purple-200 text-purple-800'
-                                                        : record.status === 'Paid'
-                                                            ? 'bg-green-200 text-green-800'
-                                                            : 'bg-gray-200 text-gray-800'
+                                                    ? 'bg-purple-200 text-purple-800'
+                                                    : record.status === 'Paid'
+                                                        ? 'bg-green-200 text-green-800'
+                                                        : 'bg-gray-200 text-gray-800'
                                                     }`}
                                             >
                                                 {record.status}
@@ -180,9 +170,10 @@ export default function Index() {
                         </Table>
                     </>
                 ) : (
-                    <div className="py-12 text-center">
-                        <p className="text-lg text-gray-500 dark:text-gray-400">No records found.</p>
-                    </div>
+                    <div className="m-4 text-center py-8 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
+                    <p className="text-gray-500 dark:text-gray-400 text-lg">No records available</p>
+                    <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">There is no patient with that username</p>
+                </div>
                 )}
             </div>
 

@@ -23,6 +23,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import SearchBar from "@/components/common/searchbar";
 
 const breadcrumbs = [
     { title: "Records", href: "/records" },
@@ -98,32 +99,13 @@ export default function Index() {
                 </Link>
             </div>
 
-            {/* Search Box */}
-            <div className="m-4 flex justify-center">
-                <form
-                    onSubmit={handleSearch}
-                    className="flex w-full max-w-3xl space-x-3"
-                >
-                    <Input
-                        type="text"
-                        name="search"
-                        placeholder="Search by patient name..."
-                        defaultValue={filters.search ?? ""}
-                        className="flex-grow rounded-md"
-                    />
-                    <Button type="submit" className="shadow-md">Search</Button>
-                    {filters.search && (
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => router.get(route("records.index"))}
-                            className="border-gray-400"
-                        >
-                            Clear
-                        </Button>
-                    )}
-                </form>
-            </div>
+            <SearchBar
+                placeholder="Search by patient name..."
+                searchValue={filters.search}
+                clearRoute={route('records.index')}
+                onSearch={handleSearch}
+            />
+
 
             {/* Flash Notification */}
             {flash.message && (
@@ -212,7 +194,7 @@ export default function Index() {
             ) : (
                 <div className="m-4 text-center py-8 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
                     <p className="text-gray-500 dark:text-gray-400 text-lg">No records available</p>
-                    <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">Create your first record to get started</p>
+                    <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">There is no patient with that username</p>
                 </div>
             )}
 
