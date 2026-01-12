@@ -2,7 +2,7 @@ import AppLogo from '@/components/app-logo';
 import { dashboard, login, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-
+import Snowfall from 'react-snowfall';
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
 
@@ -15,6 +15,13 @@ export default function Welcome() {
                     rel="stylesheet"
                 />
             </Head>
+            
+            <Snowfall
+                
+                color="#FFFFFF"
+              
+            />
+
 
             <div className="min-h-screen bg-[#FDFDFC] text-[#1b1b18] dark:bg-[#0a0a0a]">
                 {/* Navbar */}
@@ -24,10 +31,10 @@ export default function Welcome() {
                         <div className="flex items-center space-x-2">
                             {/* Replace with actual logo */}
                             <div className="h-8 w-8 rounded bg-purple-600 flex items-center justify-center text-white font-bold">
-                               <AppLogo />
+                                <AppLogo />
                             </div>
                             <span className="text-lg font-semibold text-purple-700 dark:text-purple-400">
-                              Bloom
+                                Bloom
                             </span>
                         </div>
 
@@ -42,10 +49,10 @@ export default function Welcome() {
                             <Link href="#" className="hover:text-purple-600">
                                 Patients & Visitors
                             </Link>
-                            {/* <Link href="#" className="hover:text-purple-600">
-                                Health Library
-                            </Link> */}
-                           
+                            <Link href="#" className="hover:text-purple-600">
+                                About Us
+                            </Link>
+
                         </div>
 
                         {/* Auth Buttons */}
@@ -105,7 +112,7 @@ export default function Welcome() {
                     {/* Hero Image */}
                     <div className="mb-8 w-full max-w-md lg:mb-0 lg:max-w-lg">
                         <img
-                            src="/img/hero.jpg" 
+                            src="/img/hero.jpg"
                             alt="Doctor with patient"
                             className="rounded-lg shadow-lg"
                         />

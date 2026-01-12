@@ -18,7 +18,7 @@ interface LoginProps {
 
 export default function Login({ status, canResetPassword }: LoginProps) {
     return (
-        <AuthLayout title="Login form" description="Enter your email and password here ">
+        <AuthLayout title="Login form" description="Enter your email and password">
             <Head title="Log in" />
 
             <Form {...AuthenticatedSessionController.store.form()} resetOnSuccess={['password']} className="flex flex-col gap-6">
